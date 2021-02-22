@@ -1,25 +1,18 @@
 package com.saltosvirtuales;
 
-import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-public class Principal extends ApplicationAdapter {
+import com.badlogic.gdx.Game;
+
+public class Principal extends Game {
 
 	@Override
 	public void create() {
-		super.create();
+		setScreen(new Box2DScreen(this));
+
 
 
 	}
 
-	/**
-	 * Sirve para actualizar nuestro juego, como actualizar las posiciones ect...
-	 */
-	@Override
-	public void render() {
-		super.render();
-	}
+
+
 }
