@@ -4,7 +4,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
@@ -14,6 +19,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.saltosvirtuales.Constantes;
 import com.saltosvirtuales.Entidades.ActorPinchos;
 import com.saltosvirtuales.Entidades.Floor;
@@ -43,19 +49,19 @@ public class GameScreen extends BaseScreen{
         world.setContactListener(new ContactListener() {
             private boolean hanColisionado(Contact contact,Object userA, Object userB){
                 return contact.getFixtureA().getUserData().equals(userA)&&contact.getFixtureB().getUserData().equals(userB)||
-                     contact.getFixtureA().equals(userB)&&contact.getFixtureB().equals(userA);
+                        contact.getFixtureA().equals(userB)&&contact.getFixtureB().equals(userA);
             }
             @Override
             public void beginContact(Contact contact) {
-        if (hanColisionado(contact,"player","floor")){
-            jugador.setJumping(false);
-                if (Gdx.input.justTouched()){
-                    jumpSound.play();
-                    jugador.setMustJump(true);
+                if (hanColisionado(contact,"player","floor")){
+                    jugador.setJumping(false);
+                    if (Gdx.input.justTouched()){
+                        jumpSound.play();
+                        jugador.setMustJump(true);
+                    }
+
+
                 }
-
-
-        }
                 if (hanColisionado(contact,"player","spike")){
                     if (jugador.isAlive()) {
                         jugador.setAlive(false);
@@ -93,10 +99,10 @@ public class GameScreen extends BaseScreen{
 
     @Override
     public void show() {
-    Texture jugadorTextura=game.getManager().get("texturas/player.png");
-    Texture floorTexture=game.getManager().get("texturas/floor.png");
-    Texture overfloorfexture=game.getManager().get("texturas/overfloor.png");
-    Texture spikeTexture=game.getManager().get("texturas/spike.png");
+        Texture jugadorTextura=game.getManager().get("texturas/player.png");
+        Texture floorTexture=game.getManager().get("texturas/floor.png");
+        Texture overfloorfexture=game.getManager().get("texturas/overfloor.png");
+        Texture spikeTexture=game.getManager().get("texturas/spike.png");
         jugador=new ActorJugador(world,jugadorTextura,new Vector2(1.5f,1.5f));
 
         floorList.add(new Floor(world,floorTexture,overfloorfexture,0,1000,1));

@@ -9,46 +9,25 @@ public class EntityFactory {
 
     private AssetManager manager;
 
-    /**
-     * Create a new entity factory using the provided asset manager.
-     * @param manager   the asset manager used to generate things.
-     */
+
     public EntityFactory(AssetManager manager) {
         this.manager = manager;
     }
 
-    /**
-     * Create a player using the default texture.
-     * @param world     world where the player will have to live in.
-     * @param position  initial position ofr the player in the world (meters,meters).
-     * @return          a player.
-     */
+
     public ActorJugador createPlayer(World world, Vector2 position) {
         Texture playerTexture = manager.get("texturas/player.png");
         return new ActorJugador(world, playerTexture, position);
     }
 
-    /**
-     * Create floor using the default texture set.
-     * @param world     world where the floor will live in.
-     * @param x         horizontal position for the spikes in the world (meters).
-     * @param width     width for the floor (meters).
-     * @param y         vertical position for the top of this floor (meters).
-     * @return          a floor.
-     */
+
     public Floor createFloor(World world, float x, float width, float y) {
         Texture floorTexture = manager.get("texturas/floor.png");
         Texture overfloorTexture = manager.get("texturas/overfloor.png");
         return new Floor(world, floorTexture, overfloorTexture, x, width, y);
     }
 
-    /**
-     * Create spikes using the default texture.
-     * @param world     world where the spikes will live in.
-     * @param x         horizontal position for the spikes in the world (meters).
-     * @param y         vertical position for the base of the spikes in the world (meters).
-     * @return          some spikes.
-     */
+
     public ActorPinchos createSpikes(World world, float x, float y) {
         Texture spikeTexture = manager.get("texturas/spike.png");
         return new ActorPinchos(world, spikeTexture, x, y);

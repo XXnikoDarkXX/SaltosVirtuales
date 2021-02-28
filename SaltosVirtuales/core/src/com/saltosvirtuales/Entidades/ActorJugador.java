@@ -13,46 +13,17 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.saltosvirtuales.Constantes;
 
 public class ActorJugador extends Actor {
-
-    /**
-     * The player texture.
-     */
     private Texture texture;
 
-    /**
-     * The world instance this player is in.
-     */
     private World world;
-
-    /**
-     * The body for this player.
-     */
     private Body body;
 
-    /**
-     * The fixture for this player.
-     */
     private Fixture fixture;
 
-    /**
-     * Is the player alive? If he touches a spike, is not alive. The player will only move and
-     * jump if it's alive. Otherwise it is said that the user has lost and the game is over.
-     */
     private boolean alive = true;
 
-    /**
-     * Is the player jumping? If the player is jumping, then it is not possible to jump again
-     * because the user cannot double jump. The flag has to be set when starting a jump and be
-     * unset when touching the floor again.
-     */
     private boolean jumping = false;
 
-    /**
-     * Does the player have to jump? This flag is used when the player touches the floor and the
-     * user is still touching the screen, to make a double jump. Remember that we cannot add
-     * a force inside a ContactListener. We have to use this flag to remember that the player
-     * had to jump after the collision.
-     */
     private boolean mustJump = false;
 
     public ActorJugador(World world, Texture texture, Vector2 position) {
@@ -97,23 +68,23 @@ public class ActorJugador extends Actor {
     @Override
     public void act(float delta) {
         //Iniciar un salto si hemos tocado la pantalla
-        if ( mustJump) {
+        if (mustJump) {
             mustJump = false;
             jump();
 
         }
-        if (alive){
-            float rapidezY=body.getLinearVelocity().y;
-            body.setLinearVelocity(Constantes.PLAYER_SPEED,rapidezY);
+        if (alive) {
+            float rapidezY = body.getLinearVelocity().y;
+            body.setLinearVelocity(Constantes.PLAYER_SPEED, rapidezY);
         }
 
-        if (jumping){
-        body.applyForceToCenter(0,-Constantes.IMPULSE_JUMP*1.15f,true);
+        if (jumping) {
+            body.applyForceToCenter(0, -Constantes.IMPULSE_JUMP * 1.15f, true);
         }
     }
 
     public void jump() {
-        if (!jumping&&alive) {
+        if (!jumping && alive) {
             jumping = true;
             Vector2 position = body.getPosition();
             body.applyLinearImpulse(0, Constantes.IMPULSE_JUMP, position.x, position.y, true);
@@ -140,5 +111,5 @@ public class ActorJugador extends Actor {
     public boolean isAlive() {
         return alive;
     }
-}
 
+}
