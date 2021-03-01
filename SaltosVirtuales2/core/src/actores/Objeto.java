@@ -16,27 +16,34 @@ public class Objeto extends Actor {
     private World mundo; //el mundo
     private BodyDef propiedadesCuerpo;
     private Body cuerpo;//el cuerpo
-    private FixtureDef propiedadesFisicaCuerpo;
+
 
     //
-    private Fixture fixture;
+    private boolean mostrar;//si se tiene que mostrar
+    private String nombreObjeto;
     //
 
-    public Objeto(World m,Texture texture,int positionX,int posicionY,int ancho,int alto){
+    /**
+     * Constructor de objeto
+     * @param m mundo
+     * @param texture textura
+     * @param positionX posicion x
+     * @param posicionY posicion y
+     * @param ancho ancho
+     * @param alto alto
+     */
+    public Objeto(World m,Texture texture,String nombreObjeto,int positionX,int posicionY,int ancho,int alto){
         this.mundo=m;
+        this.mostrar=true;
+        this.nombreObjeto=nombreObjeto;
         sprite=new Sprite((texture));
-        //  float anchuraSprite=5f;
-        // float alturaSprite=5f;
+
         sprite.setBounds(positionX,posicionY,ancho,alto);
         this.setBounds(positionX,posicionY,ancho,alto);
         this.propiedadesCuerpo=new BodyDef();//Establecemos las propiedades del cuero;
         propiedadesCuerpo.type=BodyDef.BodyType.StaticBody;
         propiedadesCuerpo.position.set(sprite.getX(),sprite.getY());
         cuerpo=mundo.createBody(propiedadesCuerpo);
-        propiedadesFisicaCuerpo=new FixtureDef();
-        propiedadesFisicaCuerpo.shape=new PolygonShape();
-        ((PolygonShape)propiedadesFisicaCuerpo.shape).setAsBox(sprite.getWidth()/2,sprite.getHeight()/2);//establecemos el box2d
-        propiedadesFisicaCuerpo.density=1f;
 
 
         sprite.setOrigin(this.sprite.getWidth()/2,this.sprite.getHeight()/2);
@@ -46,13 +53,56 @@ public class Objeto extends Actor {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        sprite.setPosition(cuerpo.getPosition().x-sprite.getWidth()/2,cuerpo.getPosition().y-sprite.getHeight()/2);
-        sprite.setRotation(cuerpo.getAngle());
-        this.setPosition(sprite.getX(),sprite.getY());
+
+       if (mostrar){
+            sprite.setPosition(cuerpo.getPosition().x-sprite.getWidth()/2,cuerpo.getPosition().y-sprite.getHeight()/2);
+
+            this.setPosition(sprite.getX(),sprite.getY());
         sprite.draw(batch);
+        }
+
     }
 
     public Body getCuerpo() {
         return cuerpo;
+    }
+
+
+    /**
+     * Fucnion para obtener posicion x
+     * @return la posicion x
+     */
+    public float getX(){
+        return this.cuerpo.getPosition().x;
+    }
+
+    /**
+     * Funcion que nos devuelve la posicion y
+     * @return
+     */
+    public float getY(){
+        return this.cuerpo.getPosition().y;
+    }
+
+    public boolean isMostrar() {
+        return mostrar;
+    }
+
+    public void setMostrar(boolean mostrar) {
+        this.mostrar = mostrar;
+    }
+
+
+    public Sprite getSprite() {
+        return sprite;
+    }
+
+
+    public String getNombreObjeto() {
+        return nombreObjeto;
+    }
+
+    public void setNombreObjeto(String nombreObjeto) {
+        this.nombreObjeto = nombreObjeto;
     }
 }

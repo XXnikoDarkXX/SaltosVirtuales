@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -18,6 +19,7 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.actions.RotateByAction;
 
 import java.util.ArrayList;
@@ -25,6 +27,7 @@ import java.util.HashSet;
 
 import Otros.Constantes;
 import Teclado.Teclado;
+import es.com.saltosvirtuales.TecladoListener;
 
 public class ActorJugador extends Actor {
 
@@ -36,7 +39,7 @@ public class ActorJugador extends Actor {
 
 
 
-    ///
+    //
     private Fixture fixture;
     private HashSet<Movimiento> movimientosActivos;
 
@@ -46,10 +49,13 @@ public class ActorJugador extends Actor {
     private boolean estaEnElSuelo;
     private boolean vivo;
 
+    private byte puntuacion;
+
     public  ActorJugador(World m, final Pincho pincho, final ArrayList<Body>suelos){
-        addListener(new Teclado(this));
+      //  addListener(new Teclado(this));
 
 
+        puntuacion=0;
         movimientosActivos=new HashSet<Movimiento>();
 
         this.mundo=m;
@@ -72,6 +78,9 @@ public class ActorJugador extends Actor {
         //
         fixture=cuerpo.createFixture(((PolygonShape)propiedadesFisicaCuerpo.shape),3);
         fixture.setUserData("jugador");
+
+
+
         //
         sprite.setOrigin(this.sprite.getWidth()/2,this.sprite.getHeight()/2);
 
@@ -210,6 +219,18 @@ public class ActorJugador extends Actor {
     }
 
 
+    public Sprite getSprite() {
+        return sprite;
+    }
+
+    public byte getPuntuacion() {
+        return puntuacion;
+    }
+
+    public void setPuntuacion(byte puntuacion) {
+        this.puntuacion = puntuacion;
+    }
+
     public void setSaltando(boolean saltando) {
         this.saltando = saltando;
     }
@@ -242,11 +263,30 @@ public class ActorJugador extends Actor {
     }
     private void mover() {
         if (movimientosActivos.contains(Movimiento.SALTO)) {
-            System.out.println("toco");
+
 
             this.setMasSalto(true);
 
             this.salto();
         }
     }
+
+
+    public void checkCollision(ActorJugador jugador, Objeto objeto) {
+        if(Intersector.overlaps(jugador.getSprite().getBoundingRectangle(), objeto.getSprite().getBoundingRectangle())){
+            if(objeto.getNombreObjeto().equalsIgnoreCase("moneda")){
+                jugador.setPuntuacion((byte) (jugador.getPuntuacion()+1));
+            }
+        }
+        objeto.setMostrar(false);
+    }
+
+
+    public void checkCollision(ActorJugador jugador, ArrayList<Objeto>objetos) {
+        for(Objeto spriteGroup : objetos) {
+            checkCollision(jugador, spriteGroup);
+        }
+    }
+
+
 }

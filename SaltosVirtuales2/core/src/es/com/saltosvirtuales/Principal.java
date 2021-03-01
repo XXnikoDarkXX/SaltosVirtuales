@@ -44,6 +44,7 @@ import Pantallas.PantallaJuego;
 import Teclado.Teclado;
 import actores.ActorJugador;
 import actores.Jugador;
+import actores.Objeto;
 import actores.Pincho;
 
 public class Principal extends Game {
@@ -52,6 +53,10 @@ public class Principal extends Game {
 	private static int WIDTH; //Aquí almacenaremos la anchura en tiles
 	private static int HEIGHT; //Aquí almacenaremos la altura en tiles
 
+
+	//
+		private ArrayList<Objeto>monedas;
+	//
 
 	public static final float unitScale = 1/16f; //Nos servirá para establecer que la pantalla se divide en tiles de 32 pixeles;
 	private Stage stage;//lo usaremos para dibujar un actor
@@ -73,7 +78,7 @@ public class Principal extends Game {
 	private Music music;
 
 	private Pincho pincho;
-
+	private TecladoListener teclin;
 
 	private Box2DDebugRenderer rend;
 	//----------------------------------
@@ -89,13 +94,23 @@ public class Principal extends Game {
 		float h = Gdx.graphics.getHeight(); //Obtenemos la atura de nuestra pantalla en pixels
 		///-----------------------------------
 		manager=new Manager();
-		Gdx.input.setInputProcessor(stage);//añadimos a nuestro Stagee el metodo de entrada
+	//	Gdx.input.setInputProcessor(stage);//añadimos a nuestro Stagee el metodo de entrada
 
 		pincho=new Pincho(world,50,4.3f);
 		jugador=new ActorJugador(world,pincho,suelos);
 		stage.addActor(jugador);
 		stage.addActor(pincho);
 
+
+		//Creo los objetos que tendra el mapa
+		monedas=new ArrayList<Objeto>();
+		Texture texturaMoneda=new Texture("texturas/Coin1.png");
+		monedas.add(new Objeto(world,texturaMoneda,"moneda",40,5,4,4));
+
+
+
+		teclin=new TecladoListener(jugador,monedas);
+		Gdx.input.setInputProcessor(teclin);
 		stage.setKeyboardFocus(jugador);//Establecemos el foco del teclado en uno de los actoers o varios
 
 		//----------------------------------
@@ -176,6 +191,12 @@ public class Principal extends Game {
 		world.step(Gdx.graphics.getDeltaTime(), 6, 2);
 		batch.begin();
 		stage.draw();//dibujamos
+
+
+		for (int i = 0; i < monedas.size(); ++i) {
+			monedas.get(i).draw(batch,0);
+		}
+
 
 		batch.end();
 
