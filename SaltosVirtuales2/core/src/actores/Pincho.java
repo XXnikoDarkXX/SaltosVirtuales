@@ -28,8 +28,8 @@ public class Pincho extends Actor {
         sprite=new Sprite(new Texture("texturas/spike2.png"));
         //  float anchuraSprite=5f;
         // float alturaSprite=5f;
-        sprite.setBounds(x,y,5,5);
-        this.setBounds(x,y,5,5);
+        sprite.setBounds(x,y,3,3);
+        this.setBounds(x,y,3,3);
         this.propiedadesCuerpo=new BodyDef();//Establecemos las propiedades del cuero;
         propiedadesCuerpo.type=BodyDef.BodyType.StaticBody;
         propiedadesCuerpo.position.set(sprite.getX(),sprite.getY());

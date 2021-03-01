@@ -41,6 +41,7 @@ import Otros.Constantes;
 import Otros.Manager;
 import Pantallas.Pantalla;
 import Pantallas.PantallaJuego;
+import Teclado.Teclado;
 import actores.ActorJugador;
 import actores.Jugador;
 import actores.Pincho;
@@ -80,7 +81,7 @@ public class Principal extends Game {
 	public void create() {
 	batch=new SpriteBatch();
 
-		world= new World(new Vector2(0, -9.8f), true);
+		world= new World(new Vector2(0, -10), true);
 		suelos=new ArrayList<Body>();
 		stage=new Stage(new FillViewport(100,30));
 		//stage=new Stage((new ScreenViewport()));//Inicializmos el Stage
@@ -88,12 +89,14 @@ public class Principal extends Game {
 		float h = Gdx.graphics.getHeight(); //Obtenemos la atura de nuestra pantalla en pixels
 		///-----------------------------------
 		manager=new Manager();
+		Gdx.input.setInputProcessor(stage);//añadimos a nuestro Stagee el metodo de entrada
 
-
-		pincho=new Pincho(world,50,5.4f);
+		pincho=new Pincho(world,50,4.3f);
 		jugador=new ActorJugador(world,pincho,suelos);
 		stage.addActor(jugador);
 		stage.addActor(pincho);
+
+		stage.setKeyboardFocus(jugador);//Establecemos el foco del teclado en uno de los actoers o varios
 
 		//----------------------------------
 		TiledMap map = new TmxMapLoader().load("mapas/mapa1.tmx"); //Cargamos el tilemap desde assets
@@ -155,6 +158,7 @@ public class Principal extends Game {
 	@Override
 	public void resize(int width, int height) {
 		super.resize(width, height);
+
 	}
 
 	@Override
@@ -188,7 +192,10 @@ public class Principal extends Game {
 		renderer.dispose(); //Destruimos el objeto que renderiza un mapa, para no tener filtraciones de memoria
 		stage.dispose();
 		rend.dispose();
+
 	}
+
+
 }
 
 

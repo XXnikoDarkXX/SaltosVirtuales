@@ -18,10 +18,13 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.actions.RotateByAction;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import Otros.Constantes;
+import Teclado.Teclado;
 
 public class ActorJugador extends Actor {
 
@@ -35,23 +38,32 @@ public class ActorJugador extends Actor {
 
     ///
     private Fixture fixture;
+    private HashSet<Movimiento> movimientosActivos;
+
     //
 
     private boolean saltando,masSalto;
+    private boolean estaEnElSuelo;
     private boolean vivo;
 
     public  ActorJugador(World m, final Pincho pincho, final ArrayList<Body>suelos){
+        addListener(new Teclado(this));
+
+
+        movimientosActivos=new HashSet<Movimiento>();
+
         this.mundo=m;
         this.vivo=true;
         sprite=new Sprite(new Texture("texturas/player.png"));
-      //  float anchuraSprite=5f;
-       // float alturaSprite=5f;
-        sprite.setBounds(5,6.5f,8,7);
-        this.setBounds(5,6.5f,8,7);
+
+        sprite.setBounds(5,6.5f,7,6);
+        this.setBounds(5,6.5f,7,6);
         this.propiedadesCuerpo=new BodyDef();//Establecemos las propiedades del cuero;
+        propiedadesCuerpo.fixedRotation = true;//Cuerpo no rote
         propiedadesCuerpo.type=BodyDef.BodyType.DynamicBody;
         propiedadesCuerpo.position.set(sprite.getX(),sprite.getY());
         cuerpo=mundo.createBody(propiedadesCuerpo);
+
         propiedadesFisicaCuerpo=new FixtureDef();
         propiedadesFisicaCuerpo.shape=new PolygonShape();
         ((PolygonShape)propiedadesFisicaCuerpo.shape).setAsBox(sprite.getWidth()/2,sprite.getHeight()/2);//establecemos el box2d
@@ -63,6 +75,7 @@ public class ActorJugador extends Actor {
         //
         sprite.setOrigin(this.sprite.getWidth()/2,this.sprite.getHeight()/2);
 
+        propiedadesFisicaCuerpo.shape.dispose();
 
         mundo.setContactListener(new ContactListener() {
             @Override
@@ -73,25 +86,26 @@ public class ActorJugador extends Actor {
 
                 //Si hemos colisionado entonces muero
                 if (pincho.getCuerpo()==a&&b==cuerpo){
+
                     vivo=false;
                     System.out.println("mori cierto");
                 }
                 if (suelos.contains(a)&&b==cuerpo){
                     saltando=false;
+                    estaEnElSuelo=true;
                     System.out.println("contiene suelo");
-                    if (Gdx.input.justTouched()){
+                   /* if (Gdx.input.justTouched()){
                         System.out.println("toco");
                         masSalto=true;
-                    }
+                    }*/
 
                 }
+                //mediante este if comprobamos que estamos en el suelo y podemos saltar al pulsar la tecla a
                 if (suelos.contains(b)&&a==cuerpo){
                     saltando=false;
+                    estaEnElSuelo=true;
                     System.out.println("contiene suelo");
-                    if (Gdx.input.isKeyPressed(Input.Keys.A)){
-                        System.out.println("toco");
-                        masSalto=true;
-                    }
+
                 }
 
             }
@@ -117,10 +131,17 @@ public class ActorJugador extends Actor {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-       sprite.setPosition(cuerpo.getPosition().x-sprite.getWidth()/2,cuerpo.getPosition().y-sprite.getHeight()/2);
-        sprite.setRotation(cuerpo.getAngle());
+        mover();
+
+        sprite.setPosition(cuerpo.getPosition().x-sprite.getWidth()/2,cuerpo.getPosition().y-sprite.getHeight()/2);
+     //   sprite.setRotation(cuerpo.getAngle());
+        //
+        sprite.setRotation(this.getRotation());
+
+        //
     this.setPosition(sprite.getX(),sprite.getY());
        sprite.draw(batch);
+
 
     }
 
@@ -146,11 +167,20 @@ public class ActorJugador extends Actor {
         //si estamos vivo seguiremos avanzando
         if (vivo) {
             float rapidezY = this.cuerpo.getLinearVelocity().y;
-            cuerpo.setLinearVelocity(Constantes.PLAYER_SPEED, rapidezY);
+           cuerpo.setLinearVelocity(Constantes.PLAYER_SPEED, rapidezY);
         }
 
         if (saltando){
-            cuerpo.applyForceToCenter(0,-Constantes.IMPULSE_JUMP*1.15f,true);
+            cuerpo.applyForceToCenter(0,-Constantes.IMPULSE_JUMP * 1.15f,true);
+            System.out.println("en el salto estoy");
+            //TODO no me rota
+    /*
+            RotateByAction rotarDcha=new RotateByAction();
+
+            rotarDcha.setDuration(0.3f);
+            sprite.setRotation(-13);
+            this.addAction(rotarDcha);
+*/
         }
 
     }
@@ -158,12 +188,18 @@ public class ActorJugador extends Actor {
 
     public void salto(){
         if (!saltando&&vivo){
+            estaEnElSuelo=false;
             saltando=true;
             Vector2 position=cuerpo.getPosition();
-            cuerpo.applyLinearImpulse(0,Constantes.IMPULSE_JUMP,position.x,position.y,true);
+            cuerpo.applyLinearImpulse(0,2000,position.x,position.y,true);
+
+
         }
     }
 
+    public boolean isEstaEnElSuelo() {
+        return estaEnElSuelo;
+    }
 
     public boolean isSaltando() {
         return saltando;
@@ -180,5 +216,37 @@ public class ActorJugador extends Actor {
 
     public void setVivo(boolean vivo) {
         this.vivo = vivo;
+    }
+
+    public void setEstaEnElSuelo(boolean estaEnElSuelo) {
+        this.estaEnElSuelo = estaEnElSuelo;
+    }
+
+    public void setMasSalto(boolean masSalto) {
+        this.masSalto = masSalto;
+    }
+
+    public void finalizarMovimiento(Movimiento p){
+        this.movimientosActivos.remove(p);
+    }
+
+    public void iniciarMovimiento(Movimiento p){
+
+        this.movimientosActivos.add(p);
+    }
+
+
+    public void limpiarMovimiento(){
+
+        this.movimientosActivos=new HashSet<Movimiento>();
+    }
+    private void mover() {
+        if (movimientosActivos.contains(Movimiento.SALTO)) {
+            System.out.println("toco");
+
+            this.setMasSalto(true);
+
+            this.salto();
+        }
     }
 }
