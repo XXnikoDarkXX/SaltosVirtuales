@@ -1,5 +1,6 @@
 package actores;
 
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
@@ -34,10 +35,10 @@ public class Jugador extends Actor {
         this.texture = texture;
 
 
-        BodyDef def = new BodyDef();                // (1) Create the body definition.
-        def.position.set(position);                 // (2) Put the body in the initial position.
-        def.type = BodyDef.BodyType.DynamicBody;    // (3) Remember to make it dynamic.
-        body = world.createBody(def);               // (4) Now create the body.
+        BodyDef def = new BodyDef();
+        def.position.set(position);
+        def.type = BodyDef.BodyType.DynamicBody;
+        body = world.createBody(def);
 
         // Give it some shape.
         PolygonShape box = new PolygonShape();      // (1) Create the shape.
@@ -113,5 +114,14 @@ public class Jugador extends Actor {
 
     public boolean isAlive() {
         return alive;
+    }
+
+    /**
+     * Funcion para el seguimiento de la camara
+     * @param camara la camara
+     */
+    public void seguir(OrthographicCamera camara){
+        camara.position.x=this.body.getPosition().x;
+        camara.position.y=this.body.getPosition().y;
     }
 }
