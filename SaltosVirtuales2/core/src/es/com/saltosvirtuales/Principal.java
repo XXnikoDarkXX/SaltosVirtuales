@@ -30,6 +30,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
@@ -49,6 +50,7 @@ public class Principal extends Game {
 	private OrthographicCamera camera; //Cámara a través de la que veremos el mundo.
 	private static int WIDTH; //Aquí almacenaremos la anchura en tiles
 	private static int HEIGHT; //Aquí almacenaremos la altura en tiles
+
 
 	public static final float unitScale = 1/16f; //Nos servirá para establecer que la pantalla se divide en tiles de 32 pixeles;
 	private Stage stage;//lo usaremos para dibujar un actor
@@ -71,6 +73,7 @@ public class Principal extends Game {
 
 	private Pincho pincho;
 
+
 	private Box2DDebugRenderer rend;
 	//----------------------------------
 	@Override
@@ -86,8 +89,9 @@ public class Principal extends Game {
 		///-----------------------------------
 		manager=new Manager();
 
-		jugador=new ActorJugador(world);
-		pincho=new Pincho(world,30,3);
+
+		pincho=new Pincho(world,50,5.4f);
+		jugador=new ActorJugador(world,pincho,suelos);
 		stage.addActor(jugador);
 		stage.addActor(pincho);
 
@@ -128,6 +132,10 @@ public class Principal extends Game {
 			rectanguloSuelo.createFixture(propiedadesFisicasRectangulo);
 
 		}
+
+
+
+
 
 	}
 

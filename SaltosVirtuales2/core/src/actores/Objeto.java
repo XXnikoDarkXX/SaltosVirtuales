@@ -11,8 +11,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
-public class Pincho extends Actor {
-
+public class Objeto extends Actor {
     protected Sprite sprite;//el sprite
     private World mundo; //el mundo
     private BodyDef propiedadesCuerpo;
@@ -23,13 +22,13 @@ public class Pincho extends Actor {
     private Fixture fixture;
     //
 
-    public Pincho(World m, float x, float y){
+    public Objeto(World m,Texture texture,int positionX,int posicionY,int ancho,int alto){
         this.mundo=m;
-        sprite=new Sprite(new Texture("texturas/spike2.png"));
+        sprite=new Sprite((texture));
         //  float anchuraSprite=5f;
         // float alturaSprite=5f;
-        sprite.setBounds(x,y,5,5);
-        this.setBounds(x,y,5,5);
+        sprite.setBounds(positionX,posicionY,ancho,alto);
+        this.setBounds(positionX,posicionY,ancho,alto);
         this.propiedadesCuerpo=new BodyDef();//Establecemos las propiedades del cuero;
         propiedadesCuerpo.type=BodyDef.BodyType.StaticBody;
         propiedadesCuerpo.position.set(sprite.getX(),sprite.getY());
@@ -38,13 +37,12 @@ public class Pincho extends Actor {
         propiedadesFisicaCuerpo.shape=new PolygonShape();
         ((PolygonShape)propiedadesFisicaCuerpo.shape).setAsBox(sprite.getWidth()/2,sprite.getHeight()/2);//establecemos el box2d
         propiedadesFisicaCuerpo.density=1f;
-     fixture=   cuerpo.createFixture(propiedadesFisicaCuerpo);
-     fixture.setUserData("pincho");
+
 
         sprite.setOrigin(this.sprite.getWidth()/2,this.sprite.getHeight()/2);
-
-
     }
+
+
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
