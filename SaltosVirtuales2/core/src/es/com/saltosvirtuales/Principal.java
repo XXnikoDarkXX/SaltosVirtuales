@@ -1,6 +1,5 @@
 package es.com.saltosvirtuales;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
@@ -15,35 +14,23 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.Contact;
-import com.badlogic.gdx.physics.box2d.ContactImpulse;
-import com.badlogic.gdx.physics.box2d.ContactListener;
-import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.viewport.FillViewport;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import Otros.Constantes;
 import Otros.Manager;
-import Pantallas.Pantalla;
-import Pantallas.PantallaJuego;
-import Teclado.Teclado;
 import actores.ActorJugador;
-import actores.Jugador;
 import actores.Objeto;
 import actores.Pincho;
 
@@ -98,6 +85,7 @@ public class Principal extends Game {
 
 		pincho=new Pincho(world,50,4.3f);
 		jugador=new ActorJugador(world,pincho,suelos);
+
 		stage.addActor(jugador);
 		stage.addActor(pincho);
 
@@ -106,8 +94,12 @@ public class Principal extends Game {
 		monedas=new ArrayList<Objeto>();
 		Texture texturaMoneda=new Texture("texturas/Coin1.png");
 		monedas.add(new Objeto(world,texturaMoneda,"moneda",40,5,4,4));
+		//Segunda opcion
+		//Monedas moneda =new Monedas(world,40,5);
+		//stage.addActor(moneda);
 
 
+		
 
 		teclin=new TecladoListener(jugador,monedas);
 		Gdx.input.setInputProcessor(teclin);
@@ -130,13 +122,14 @@ public class Principal extends Game {
 		this.rend=new Box2DDebugRenderer();
 
 
+
 		camera.position.x = WIDTH/2;  //Establecemos la posición x de la cámara en función del número de tiles de la anchura. Jugaremos con esto en clase
 		camera.position.y = HEIGHT/2; //Establecemos la posición x de la cámara en función del número de tiles de la anchura. Jugaremos con esto en clase
 
 		camera.update(); //Colocamos la Cámara.
 
 
-
+	//Para recoger el suelo
 		for (MapObject objeto:map.getLayers().get("Suelo").getObjects()){
 			BodyDef propiedadesRectangulo= new BodyDef(); //Establecemos las propiedades del cuerpo
 			propiedadesRectangulo.type = BodyDef.BodyType.StaticBody;
@@ -195,8 +188,8 @@ public class Principal extends Game {
 
 		for (int i = 0; i < monedas.size(); ++i) {
 			monedas.get(i).draw(batch,0);
+			checkCollision(jugador,monedas.get(i));
 		}
-
 
 		batch.end();
 
@@ -216,7 +209,31 @@ public class Principal extends Game {
 
 	}
 
+	public void checkCollision(ActorJugador jugador, Objeto objeto) {
+		if(Intersector.overlaps(jugador.getSprite().getBoundingRectangle(), objeto.getSprite().getBoundingRectangle())){
+			if(objeto.getNombreObjeto().equalsIgnoreCase("moneda")){
 
+				if (objeto.isMostrar()==false){
+					System.out.println(jugador.getPuntuacion());
+				}else {
+					jugador.setPuntuacion((byte) (jugador.getPuntuacion() + 1));
+					System.out.println("Recogistes una moneda");
+					objeto.setMostrar(false);
+					jugador.getPuntuacion();
+				}
+
+			}
+		}
+
+	}
+
+
+
+	public void checkCollision(ActorJugador jugador, ArrayList<Objeto>objetos) {
+		for(Objeto spriteGroup : objetos) {
+			checkCollision(jugador, spriteGroup);
+		}
+	}
 }
 
 

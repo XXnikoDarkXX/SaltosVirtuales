@@ -16,7 +16,7 @@ public class Objeto extends Actor {
     private World mundo; //el mundo
     private BodyDef propiedadesCuerpo;
     private Body cuerpo;//el cuerpo
-
+    private FixtureDef propiedadesFisicaCuerpo;
 
     //
     private boolean mostrar;//si se tiene que mostrar
@@ -39,11 +39,13 @@ public class Objeto extends Actor {
         sprite=new Sprite((texture));
 
         sprite.setBounds(positionX,posicionY,ancho,alto);
-        this.setBounds(positionX,posicionY,ancho,alto);
         this.propiedadesCuerpo=new BodyDef();//Establecemos las propiedades del cuero;
         propiedadesCuerpo.type=BodyDef.BodyType.StaticBody;
         propiedadesCuerpo.position.set(sprite.getX(),sprite.getY());
         cuerpo=mundo.createBody(propiedadesCuerpo);
+
+
+
 
 
         sprite.setOrigin(this.sprite.getWidth()/2,this.sprite.getHeight()/2);
@@ -105,4 +107,6 @@ public class Objeto extends Actor {
     public void setNombreObjeto(String nombreObjeto) {
         this.nombreObjeto = nombreObjeto;
     }
+
+
 }

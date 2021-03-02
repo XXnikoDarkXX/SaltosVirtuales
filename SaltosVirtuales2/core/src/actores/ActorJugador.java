@@ -42,7 +42,7 @@ public class ActorJugador extends Actor {
     //
     private Fixture fixture;
     private HashSet<Movimiento> movimientosActivos;
-
+    private ArrayList<Objeto>objetos;
     //
 
     private boolean saltando,masSalto;
@@ -192,6 +192,8 @@ public class ActorJugador extends Actor {
 */
         }
 
+
+
     }
 
 
@@ -272,20 +274,10 @@ public class ActorJugador extends Actor {
     }
 
 
-    public void checkCollision(ActorJugador jugador, Objeto objeto) {
-        if(Intersector.overlaps(jugador.getSprite().getBoundingRectangle(), objeto.getSprite().getBoundingRectangle())){
-            if(objeto.getNombreObjeto().equalsIgnoreCase("moneda")){
-                jugador.setPuntuacion((byte) (jugador.getPuntuacion()+1));
-            }
-        }
-        objeto.setMostrar(false);
-    }
 
 
-    public void checkCollision(ActorJugador jugador, ArrayList<Objeto>objetos) {
-        for(Objeto spriteGroup : objetos) {
-            checkCollision(jugador, spriteGroup);
-        }
+    public void añadirObjeto(ArrayList<Objeto>objetos){
+        this.objetos=objetos;
     }
 
 

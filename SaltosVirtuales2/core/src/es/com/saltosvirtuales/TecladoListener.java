@@ -74,14 +74,14 @@ public class TecladoListener implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        if(screenY>Gdx.graphics.getHeight()/3) {
+      /*  if(screenY>Gdx.graphics.getHeight()/3) {
             if (this.jugador.isEstaEnElSuelo() == true) {
                 jugador.iniciarMovimiento(Movimiento.SALTO);
             }
         }
 
         checkCollision(jugador, monedas);
-
+*/
         return false;
         }
 
@@ -91,10 +91,10 @@ public class TecladoListener implements InputProcessor {
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        if(screenY>Gdx.graphics.getHeight()/3) {
+       /* if(screenY>Gdx.graphics.getHeight()/3) {
             jugador.finalizarMovimiento(Movimiento.SALTO);
 
-        }
+        }*/
         return false;
     }
 
@@ -120,10 +120,11 @@ public class TecladoListener implements InputProcessor {
      * @param
      * @param objeto el objeto
      */
-    public void checkCollision(ActorJugador jugador, Objeto objeto) {
+   /* public void checkCollision(ActorJugador jugador, Objeto objeto) {
         if(Intersector.overlaps(jugador.getSprite().getBoundingRectangle(), objeto.getSprite().getBoundingRectangle())){
             if(objeto.getNombreObjeto().equalsIgnoreCase("moneda")){
                jugador.setPuntuacion((byte) (jugador.getPuntuacion()+1));
+                System.out.println("ha colisionado un objeto");
             }
         }
         objeto.setMostrar(false);
@@ -134,6 +135,6 @@ public class TecladoListener implements InputProcessor {
         for(Objeto spriteGroup : objetos) {
             checkCollision(jugador, spriteGroup);
         }
-    }
+    }*/
 
 }
