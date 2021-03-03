@@ -57,4 +57,12 @@ public class Pincho extends Actor {
     public Body getCuerpo() {
         return cuerpo;
     }
+
+    public Sprite getSprite() {
+        return sprite;
+    }
+
+    public void destruirCuerpo(){
+        mundo.destroyBody(cuerpo);
+    }
 }

@@ -3,10 +3,8 @@ package es.com.saltosvirtuales;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.scenes.scene2d.actions.RotateByAction;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import actores.ActorJugador;
@@ -18,12 +16,11 @@ public class TecladoListener implements InputProcessor {
 
     private ActorJugador jugador;
 
-    private ArrayList<Objeto>monedas;
 
-    public TecladoListener(ActorJugador jugador,  ArrayList<Objeto> monedas){
+    public TecladoListener(ActorJugador jugador) {
 
-        this.jugador=jugador;
-        this.monedas=monedas;
+        this.jugador = jugador;
+
 
     }
 
@@ -74,27 +71,22 @@ public class TecladoListener implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-      /*  if(screenY>Gdx.graphics.getHeight()/3) {
+        if (screenY > Gdx.graphics.getHeight() / 3) {
             if (this.jugador.isEstaEnElSuelo() == true) {
                 jugador.iniciarMovimiento(Movimiento.SALTO);
             }
         }
 
-        checkCollision(jugador, monedas);
-*/
         return false;
-        }
-
-
-
+    }
 
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-       /* if(screenY>Gdx.graphics.getHeight()/3) {
+        if (screenY > Gdx.graphics.getHeight() / 3) {
             jugador.finalizarMovimiento(Movimiento.SALTO);
 
-        }*/
+        }
         return false;
     }
 
@@ -112,7 +104,6 @@ public class TecladoListener implements InputProcessor {
     public boolean scrolled(float amountX, float amountY) {
         return false;
     }
-
 
 
     /**

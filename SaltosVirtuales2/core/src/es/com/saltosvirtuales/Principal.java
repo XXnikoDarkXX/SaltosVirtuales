@@ -20,7 +20,11 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.ContactImpulse;
+import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -42,7 +46,7 @@ public class Principal extends Game {
 
 
 	//
-		private ArrayList<Objeto>monedas;
+		private ArrayList<Objeto> objetos;
 	//
 
 	public static final float unitScale = 1/16f; //Nos servirá para establecer que la pantalla se divide en tiles de 32 pixeles;
@@ -64,7 +68,7 @@ public class Principal extends Game {
 	private Sound jumpSound, dieSound;
 	private Music music;
 
-	private Pincho pincho;
+	private ArrayList<Pincho> pincho;
 	private TecladoListener teclin;
 
 	private Box2DDebugRenderer rend;
@@ -76,32 +80,35 @@ public class Principal extends Game {
 		world= new World(new Vector2(0, -10), true);
 		suelos=new ArrayList<Body>();
 		stage=new Stage(new FillViewport(100,30));
-		//stage=new Stage((new ScreenViewport()));//Inicializmos el Stage
+
 		float w = Gdx.graphics.getWidth(); //Obtenemos la anchura de nuestra pantalla en pixels
 		float h = Gdx.graphics.getHeight(); //Obtenemos la atura de nuestra pantalla en pixels
 		///-----------------------------------
 		manager=new Manager();
 	//	Gdx.input.setInputProcessor(stage);//añadimos a nuestro Stagee el metodo de entrada
 
-		pincho=new Pincho(world,50,4.3f);
+		pincho=new ArrayList<Pincho>();
+		pincho.add(new Pincho(world,50,4.3f));
+		pincho.add(new Pincho(world,90,4.3f));
 		jugador=new ActorJugador(world,pincho,suelos);
 
 		stage.addActor(jugador);
-		stage.addActor(pincho);
+		for (int i = 0; i < pincho.size(); ++i) {
+			stage.addActor(pincho.get(i));
+		}
+
 
 
 		//Creo los objetos que tendra el mapa
-		monedas=new ArrayList<Objeto>();
+		objetos =new ArrayList<Objeto>();
 		Texture texturaMoneda=new Texture("texturas/Coin1.png");
-		monedas.add(new Objeto(world,texturaMoneda,"moneda",40,5,4,4));
-		//Segunda opcion
-		//Monedas moneda =new Monedas(world,40,5);
-		//stage.addActor(moneda);
-
-
+		Texture texturaCalavera=new Texture("texturas/calavera.png");
+		objetos.add(new Objeto(world,texturaMoneda,"moneda",40,5,4,4));
+		objetos.add(new Objeto(world,texturaMoneda,"moneda",60,5,4,4));
+		objetos.add(new Objeto(world,texturaCalavera,"calavera",20,5,4,3));
 		
 
-		teclin=new TecladoListener(jugador,monedas);
+		teclin=new TecladoListener(jugador);
 		Gdx.input.setInputProcessor(teclin);
 		stage.setKeyboardFocus(jugador);//Establecemos el foco del teclado en uno de los actoers o varios
 
@@ -163,6 +170,12 @@ public class Principal extends Game {
 		return polygon;
 	}
 
+
+
+
+
+
+
 	@Override
 	public void resize(int width, int height) {
 		super.resize(width, height);
@@ -186,12 +199,18 @@ public class Principal extends Game {
 		stage.draw();//dibujamos
 
 
-		for (int i = 0; i < monedas.size(); ++i) {
-			monedas.get(i).draw(batch,0);
-			checkCollision(jugador,monedas.get(i));
+		for (int i = 0; i < objetos.size(); ++i) {
+			objetos.get(i).draw(batch,0);
+			checkCollision(jugador, objetos.get(i));
 		}
 
+
+
+
+
 		batch.end();
+
+
 
 		camera.update();
 
@@ -214,18 +233,34 @@ public class Principal extends Game {
 			if(objeto.getNombreObjeto().equalsIgnoreCase("moneda")){
 
 				if (objeto.isMostrar()==false){
-					System.out.println(jugador.getPuntuacion());
+					//System.out.println(jugador.getPuntuacion());
 				}else {
 					jugador.setPuntuacion((byte) (jugador.getPuntuacion() + 1));
 					System.out.println("Recogistes una moneda");
 					objeto.setMostrar(false);
-					jugador.getPuntuacion();
+					//jugador.getPuntuacion();
+				}
+
+			}
+			if (objeto.getNombreObjeto().equalsIgnoreCase("calavera")){
+				if (!objeto.isMostrar()==false){
+					jugador.setInmortalidad(true);
+					System.out.println("eres inmortal ");
+					objeto.setMostrar(false);
+
+
+
 				}
 
 			}
 		}
 
+
+
+
 	}
+
+
 
 
 
@@ -234,6 +269,12 @@ public class Principal extends Game {
 			checkCollision(jugador, spriteGroup);
 		}
 	}
+
+
+
+
+
+
 }
 
 

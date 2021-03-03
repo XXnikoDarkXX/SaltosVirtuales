@@ -4,15 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.actions.MoveByAction;
 import com.badlogic.gdx.scenes.scene2d.actions.RotateByAction;
 
-import java.util.ArrayList;
-
 import actores.ActorJugador;
-import actores.Jugador;
 import actores.Movimiento;
-import actores.Objeto;
 
 public class Teclado extends InputListener {
     private ActorJugador jugador;

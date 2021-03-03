@@ -1,12 +1,9 @@
 package actores;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -19,15 +16,12 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
-import com.badlogic.gdx.scenes.scene2d.actions.RotateByAction;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 
 import Otros.Constantes;
-import Teclado.Teclado;
-import es.com.saltosvirtuales.TecladoListener;
 
 public class ActorJugador extends Actor {
 
@@ -48,10 +42,10 @@ public class ActorJugador extends Actor {
     private boolean saltando,masSalto;
     private boolean estaEnElSuelo;
     private boolean vivo;
-
+    private boolean inmortalidad;//variable para controlar la inmortalidad
     private byte puntuacion;
 
-    public  ActorJugador(World m, final Pincho pincho, final ArrayList<Body>suelos){
+    public  ActorJugador(World m, final ArrayList<Pincho> pincho, final ArrayList<Body>suelos){
       //  addListener(new Teclado(this));
 
 
@@ -94,11 +88,20 @@ public class ActorJugador extends Actor {
                 Body b=contact.getFixtureB().getBody();
 
                 //Si hemos colisionado entonces muero
-                if (pincho.getCuerpo()==a&&b==cuerpo){
+              //  if (pincho.getCuerpo()==a&&b==cuerpo){
 
-                    vivo=false;
-                    System.out.println("mori cierto");
-                }
+                //Buscamos si en algunos de los pinchos hemos colisionado
+                for (int i = 0; i < pincho.size(); ++i) {
+                    if (pincho.get(i).getCuerpo()==a&&b==cuerpo){
+                        //controlamos si tenemos la inmortalidad
+
+                            vivo = false;
+                            System.out.println("mori cierto");
+
+                        }
+                    }
+
+
                 if (suelos.contains(a)&&b==cuerpo){
                     saltando=false;
                     estaEnElSuelo=true;
@@ -229,12 +232,29 @@ public class ActorJugador extends Actor {
         return puntuacion;
     }
 
+    public Body getCuerpo() {
+        return cuerpo;
+    }
+
+    public World getMundo() {
+        return mundo;
+    }
+
+    public boolean isInmortalidad() {
+        return inmortalidad;
+    }
+
     public void setPuntuacion(byte puntuacion) {
         this.puntuacion = puntuacion;
     }
 
     public void setSaltando(boolean saltando) {
         this.saltando = saltando;
+    }
+
+
+    public void setInmortalidad(boolean inmortalidad) {
+        this.inmortalidad = inmortalidad;
     }
 
     public void setVivo(boolean vivo) {
