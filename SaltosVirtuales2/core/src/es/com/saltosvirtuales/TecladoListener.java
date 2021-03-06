@@ -47,6 +47,12 @@ public class TecladoListener implements InputProcessor {
 
                 break;
 
+
+            case Input.Keys.D:
+                this.jugador.setVivo(false);
+                System.out.println("si lo pulsaste");
+                break;
+
         }
         return false;
 

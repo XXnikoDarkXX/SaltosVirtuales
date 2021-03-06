@@ -37,7 +37,7 @@ public class ActorJugador extends Actor {
     //
     private Fixture fixture;
     private HashSet<Movimiento> movimientosActivos;
-    private ArrayList<Objeto>objetos;
+
     //
 
     private boolean saltando,masSalto;
@@ -46,7 +46,7 @@ public class ActorJugador extends Actor {
     private boolean inmortalidad;//variable para controlar la inmortalidad
     private byte puntuacion;
 
-    public  ActorJugador(World m, final ArrayList<Pincho> pincho, final ArrayList<Body>suelos){
+    public  ActorJugador(World m, final ArrayList<Pincho> pincho, final ArrayList<Body>suelos,final ArrayList<Body>caida){
         //  addListener(new Teclado(this));
 
 
@@ -58,9 +58,25 @@ public class ActorJugador extends Actor {
         sprite=new Sprite(new Texture("texturas/player.png"));
 
 
+        //desde el principio
+    //     sprite.setBounds(5,6.5f,1f,1.5f);
+        //Parte 1 hacia arriba
+       // sprite.setBounds(90,6.5f,1f,1.5f);
+    //parte 1 hacia abajo invierno
+     //  sprite.setBounds(163,16.8f,1f,1.5f);
+        //amarillo
+        //sprite.setBounds(220.71465f,   2.755f,1f,1.5f);
 
-        sprite.setBounds(5,6.5f,1f,1.5f);
-     //   this.setBounds(5,6.5f,7,6);
+      //  Saltando pincho obstaculo
+      // sprite.setBounds(245.53915f,   4.754999f,1f,1.5f);
+        //Terminamos amarillo
+       // sprite.setBounds(315f,   2,1f,1.5f);
+
+        sprite.setBounds(353.44974f, 2.0149999f,1f,1.5f);
+
+       //parte rojo  con moneda
+        // sprite.setBounds(430f, 14.3f,1f,1.5f);
+
         this.propiedadesCuerpo=new BodyDef();//Establecemos las propiedades del cuero;
         propiedadesCuerpo.fixedRotation = true;//Cuerpo no rote
         propiedadesCuerpo.type=BodyDef.BodyType.DynamicBody;
@@ -120,8 +136,24 @@ public class ActorJugador extends Actor {
                     saltando=false;
                     estaEnElSuelo=true;
                     System.out.println("contiene suelo");
+                    System.out.println(cuerpo.getPosition().x+"   "+cuerpo.getPosition().y);
 
                 }
+
+                if (caida.contains(a)&&b==cuerpo){
+                        vivo=false;
+                    System.out.println("Game over");
+
+                }
+
+                if (caida.contains(b)&&a==cuerpo){
+                    vivo=false;
+                    System.out.println("Game over");
+
+
+                }
+
+
 
             }
 
@@ -179,11 +211,15 @@ public class ActorJugador extends Actor {
         if (vivo) {
             float rapidezY = this.cuerpo.getLinearVelocity().y;
            cuerpo.setLinearVelocity(Constantes.PLAYER_SPEED, rapidezY);
+        }else{
+         //   vivo=true;
+           // cuerpo.setTransform(3,4,cuerpo.getAngle());
+            System.out.println(" x : "+sprite.getX()+" Y "+sprite.getY());
         }
 
         if (saltando){
             cuerpo.applyForceToCenter(0,-Constantes.IMPULSE_JUMP * 1.15f,true);
-            System.out.println("en el salto estoy");
+
             //TODO no me rota
     /*
             RotateByAction rotarDcha=new RotateByAction();
@@ -264,6 +300,10 @@ public class ActorJugador extends Actor {
         this.estaEnElSuelo = estaEnElSuelo;
     }
 
+    public void setCuerpo(Body cuerpo) {
+        this.cuerpo = cuerpo;
+    }
+
     public void setMasSalto(boolean masSalto) {
         this.masSalto = masSalto;
     }
@@ -295,9 +335,7 @@ public class ActorJugador extends Actor {
 
 
 
-    public void añadirObjeto(ArrayList<Objeto>objetos){
-        this.objetos=objetos;
-    }
+
 
 
 }

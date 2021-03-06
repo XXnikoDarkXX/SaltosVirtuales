@@ -1,5 +1,7 @@
 package actores;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -17,10 +19,13 @@ public class Objeto extends Actor {
     private BodyDef propiedadesCuerpo;
     private Body cuerpo;//el cuerpo
     private FixtureDef propiedadesFisicaCuerpo;
+    private float cambioX;//Para el teleport posicionX
+    private float cambioY;//para el telepor posicionY
 
     //
     private boolean mostrar;//si se tiene que mostrar
     private String nombreObjeto;
+    private String nombreMusica;
     //
 
     /**
@@ -32,7 +37,7 @@ public class Objeto extends Actor {
      * @param ancho ancho
      * @param alto alto
      */
-    public Objeto(World m,Texture texture,String nombreObjeto,int positionX,int posicionY,int ancho,int alto){
+    public Objeto(World m,Texture texture,String nombreObjeto,int positionX,int posicionY,float ancho,float alto){
         this.mundo=m;
         this.mostrar=true;
         this.nombreObjeto=nombreObjeto;
@@ -51,6 +56,50 @@ public class Objeto extends Actor {
         sprite.setOrigin(this.sprite.getWidth()/2,this.sprite.getHeight()/2);
     }
 
+
+
+    public Objeto(World m,Texture texture,String nombreObjeto,int positionX,int posicionY,float ancho,float alto,float cambioX,float cambioY){
+        this.mundo=m;
+        this.mostrar=true;
+        this.nombreObjeto=nombreObjeto;
+        sprite=new Sprite((texture));
+
+        this.cambioX=cambioX;
+        this.cambioY=cambioY;
+
+
+
+        sprite.setBounds(positionX,posicionY,ancho,alto);
+        this.propiedadesCuerpo=new BodyDef();//Establecemos las propiedades del cuero;
+        propiedadesCuerpo.type=BodyDef.BodyType.StaticBody;
+        propiedadesCuerpo.position.set(sprite.getX(),sprite.getY());
+        cuerpo=mundo.createBody(propiedadesCuerpo);
+
+
+
+
+
+        sprite.setOrigin(this.sprite.getWidth()/2,this.sprite.getHeight()/2);
+    }
+
+    public Objeto(World m,Texture texture,String nombreObjeto,String rutaMusica,int positionX,int posicionY,float ancho,float alto){
+        this.mundo=m;
+        this.mostrar=true;
+        this.nombreObjeto=nombreObjeto;
+        sprite=new Sprite((texture));
+        this.nombreMusica=rutaMusica;
+        sprite.setBounds(positionX,posicionY,ancho,alto);
+        this.propiedadesCuerpo=new BodyDef();//Establecemos las propiedades del cuero;
+        propiedadesCuerpo.type=BodyDef.BodyType.StaticBody;
+        propiedadesCuerpo.position.set(sprite.getX(),sprite.getY());
+        cuerpo=mundo.createBody(propiedadesCuerpo);
+
+
+
+
+
+        sprite.setOrigin(this.sprite.getWidth()/2,this.sprite.getHeight()/2);
+    }
 
 
     @Override
@@ -109,4 +158,26 @@ public class Objeto extends Actor {
     }
 
 
+    public float getCambioX() {
+        return cambioX;
+    }
+
+    public float getCambioY() {
+        return cambioY;
+    }
+
+    public Music devolerMusica(String ruta){
+        Music music= Gdx.audio.newMusic(Gdx.files.internal(ruta));
+
+        return music;
+    }
+
+    public void setNombreMusica(String nombreMusica) {
+        this.nombreMusica = nombreMusica;
+    }
+
+
+    public String getNombreMusica() {
+        return nombreMusica;
+    }
 }

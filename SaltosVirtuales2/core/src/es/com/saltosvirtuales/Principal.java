@@ -25,9 +25,12 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 
 import java.util.ArrayList;
+
+import javax.xml.soap.Text;
 
 import Otros.Manager;
 import actores.ActorJugador;
@@ -44,6 +47,7 @@ public class Principal extends Game {
 
 	//
 		private ArrayList<Objeto> objetos;
+		private ArrayList<String>RutasMusica;
 	//
 
 	public static final float unitScale = 1/16f; //Nos servirá para establecer que la pantalla se divide en tiles de 32 pixeles;
@@ -57,6 +61,8 @@ public class Principal extends Game {
 	 * Los objetos que actuan como superficies en el juego
 	 */
 	private ArrayList<Body> suelos;
+	private ArrayList<Body> caida;
+
 //-------------------------------------------------
 
 	private World world;
@@ -76,7 +82,9 @@ public class Principal extends Game {
 
 		world= new World(new Vector2(0, -10), true);
 		suelos=new ArrayList<Body>();
-	//	stage=new Stage(new FillViewport(100,30));
+		caida=new ArrayList<Body>();
+
+		//	stage=new Stage(new FillViewport(100,30));
 
 		float w = Gdx.graphics.getWidth(); //Obtenemos la anchura de nuestra pantalla en pixels
 		float h = Gdx.graphics.getHeight(); //Obtenemos la atura de nuestra pantalla en pixels
@@ -85,12 +93,27 @@ public class Principal extends Game {
 	//	Gdx.input.setInputProcessor(stage);//añadimos a nuestro Stagee el metodo de entrada
 
 		pincho=new ArrayList<Pincho>();
-		pincho.add(new Pincho(world,50,4.3f));
-		pincho.add(new Pincho(world,90,4.3f));
-		jugador=new ActorJugador(world,pincho,suelos);
 
-	//	stage.addActor(jugador);
+		pincho.add(new Pincho(world,28.370468f, 4));
+		pincho.add(new Pincho(world,37, 4));
+		pincho.add(new Pincho(world,50,4f));
 
+		pincho.add(new Pincho(world,52, 4));
+		pincho.add(new Pincho(world,67,  4.5f));
+
+		pincho.add(new Pincho(world,90,4f));
+		pincho.add(new Pincho(world,309,5.5f));
+		pincho.add(new Pincho(world,321,3.2f));
+		pincho.add(new Pincho(world,346.40668f,   2.7637267f));
+		pincho.add(new Pincho(world,444f,15));
+
+
+		jugador=new ActorJugador(world,pincho,suelos,caida);
+
+
+
+		//Creo la musica
+		music=Gdx.audio.newMusic(Gdx.files.internal("audio/song.ogg"));
 
 
 
@@ -98,10 +121,31 @@ public class Principal extends Game {
 		objetos =new ArrayList<Objeto>();
 		Texture texturaMoneda=new Texture("texturas/Coin1.png");
 		Texture texturaCalavera=new Texture("texturas/calavera.png");
-		objetos.add(new Objeto(world,texturaMoneda,"moneda",40,5,4,4));
-		objetos.add(new Objeto(world,texturaMoneda,"moneda",60,5,4,4));
-		objetos.add(new Objeto(world,texturaCalavera,"calavera",20,5,4,3));
-		
+		Texture texturaReloj=new Texture("texturas/reloj.png");
+		Texture texturaMusica=new Texture("texturas/music.png");
+		//moneda
+		objetos.add(new Objeto(world,texturaMoneda,"moneda",34, 5,1,2));
+		objetos.add(new Objeto(world,texturaMoneda,"moneda",40,5,1,2));
+		objetos.add(new Objeto(world,texturaMoneda,"moneda",330,5,1,2));
+		objetos.add(new Objeto(world,texturaMoneda,"moneda",60,5,1,2));
+		objetos.add(new Objeto(world,texturaMoneda,"moneda",228,3,1,2));
+		objetos.add(new Objeto(world,texturaMoneda,"moneda",470,17,1,2));
+
+
+
+
+		objetos.add(new Objeto(world,texturaCalavera,"calavera",20,5,2,2));
+		//musica
+
+		objetos.add(new Objeto(world,texturaMusica,"musica","audio/music2.ogg",227, 3,2,3));
+
+
+
+		//relojes
+
+		objetos.add(new Objeto(world,texturaReloj,"reloj",328,4,0.7f,0.8f,3,3));
+
+
 
 		teclin=new TecladoListener(jugador);
 		Gdx.input.setInputProcessor(teclin);
@@ -144,9 +188,24 @@ public class Principal extends Game {
 			propiedadesFisicasRectangulo.density = 1f;
 			rectanguloSuelo.createFixture(propiedadesFisicasRectangulo);
 
+
 		}
 
 
+		for (MapObject objeto:map.getLayers().get("caida").getObjects()){
+			BodyDef propiedadesRectangulo= new BodyDef(); //Establecemos las propiedades del cuerpo
+			propiedadesRectangulo.type = BodyDef.BodyType.StaticBody;
+			Body rectanguloSuelo = world.createBody(propiedadesRectangulo);
+			caida.add(rectanguloSuelo);
+			FixtureDef propiedadesFisicasRectangulo=new FixtureDef();
+			Shape formaRectanguloSuelo=
+					getRectangle((RectangleMapObject)objeto);
+			propiedadesFisicasRectangulo.shape = formaRectanguloSuelo;
+			propiedadesFisicasRectangulo.density = 1f;
+			rectanguloSuelo.createFixture(propiedadesFisicasRectangulo);
+
+
+		}
 
 
 
@@ -179,6 +238,8 @@ public class Principal extends Game {
 
 	@Override
 	public void render() {
+
+		music.play();
 		Gdx.gl.glClearColor(1, 1, 0, 0.5f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		//camera.update(); //Colocamos la Cámara.
@@ -214,7 +275,9 @@ public class Principal extends Game {
 	//	System.out.println(jugador.getSprite().getX()+" y: "+jugador.getSprite().getY()+" cuerpo x: "+jugador.getCuerpo().getPosition().x+" y "+jugador.getCuerpo().getPosition().y);
 
 		camera.update();
-
+		if (jugador.isVivo()==false){
+			music.stop();
+		}
 		rend.render(world, camera.combined);
 	}
 
@@ -222,7 +285,7 @@ public class Principal extends Game {
 	@Override
 	public void dispose() {
 		world.dispose();
-
+		music.dispose();
 		renderer.dispose(); //Destruimos el objeto que renderiza un mapa, para no tener filtraciones de memoria
 	//	stage.dispose();
 		rend.dispose();
@@ -248,6 +311,39 @@ public class Principal extends Game {
 					jugador.setInmortalidad(true);
 					System.out.println("eres inmortal ");
 					objeto.setMostrar(false);
+
+
+
+
+
+				}
+
+			}
+
+
+			if (objeto.getNombreObjeto().equalsIgnoreCase("reloj")){
+				if (!objeto.isMostrar()==false){
+
+					System.out.println("reloj");
+					objeto.setMostrar(false);
+
+					jugador.getCuerpo().setTransform(objeto.getCambioX(),objeto.getCambioY(),jugador.getCuerpo().getAngle());
+
+
+
+				}
+
+			}
+
+			if (objeto.getNombreObjeto().equalsIgnoreCase("musica")){
+
+
+				if (!objeto.isMostrar()==false){
+					music.stop();
+
+					this.music=Gdx.audio.newMusic(Gdx.files.internal(objeto.getNombreMusica()));
+					objeto.setMostrar(false);
+
 
 
 
