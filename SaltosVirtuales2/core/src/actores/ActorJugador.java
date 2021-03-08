@@ -59,7 +59,7 @@ public class ActorJugador extends Actor {
 
 
         //desde el principio
-        sprite.setBounds(5,6.5f,1f,1.5f);
+      sprite.setBounds(5,6.5f,1f,1.5f);
         //Parte 1 hacia arriba
        // sprite.setBounds(90,6.5f,1f,1.5f);
     //parte 1 hacia abajo invierno
@@ -75,7 +75,7 @@ public class ActorJugador extends Actor {
  //       sprite.setBounds(353.44974f, 2.0149999f,1f,1.5f);
 
        //parte rojo  con moneda
-        //sprite.setBounds(430f, 14.3f,1f,1.5f);
+        // sprite.setBounds(430f, 14.3f,1f,1.5f);
 
         this.propiedadesCuerpo=new BodyDef();//Establecemos las propiedades del cuero;
         propiedadesCuerpo.fixedRotation = true;//Cuerpo no rote
@@ -94,7 +94,7 @@ public class ActorJugador extends Actor {
 
 
 
-        //
+
        // sprite.setOrigin(this.sprite.getWidth()/2,this.sprite.getHeight()/2);
 
 
@@ -125,7 +125,10 @@ public class ActorJugador extends Actor {
                     saltando=false;
                     estaEnElSuelo=true;
                     System.out.println("contiene suelo");
-                 
+                   /* if (Gdx.input.justTouched()){
+                        System.out.println("toco");
+                        masSalto=true;
+                    }*/
 
                 }
                 //mediante este if comprobamos que estamos en el suelo y podemos saltar al pulsar la tecla a

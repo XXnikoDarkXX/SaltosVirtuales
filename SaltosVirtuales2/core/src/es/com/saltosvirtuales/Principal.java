@@ -4,10 +4,13 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -24,15 +27,9 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.utils.viewport.FillViewport;
 
 import java.util.ArrayList;
 
-import javax.xml.soap.Text;
-
-import Otros.Manager;
 import actores.ActorJugador;
 import actores.Objeto;
 import actores.Pincho;
@@ -40,14 +37,15 @@ import actores.Pincho;
 public class Principal extends Game {
 	private OrthogonalTiledMapRenderer renderer; //Clase auxiliar para renderizar un mapa.
 	private OrthographicCamera camera;
-
 	private static int WIDTH; //Aquí almacenaremos la anchura en tiles
 	private static int HEIGHT; //Aquí almacenaremos la altura en tiles
+
 
 
 	//
 		private ArrayList<Objeto> objetos;
 		private ArrayList<String>RutasMusica;
+
 	//
 
 	public static final float unitScale = 1/16f; //Nos servirá para establecer que la pantalla se divide en tiles de 32 pixeles;
@@ -68,7 +66,6 @@ public class Principal extends Game {
 
 	private World world;
 	private ActorJugador jugador;
-	private Manager manager;
 	private Sound jumpSound, dieSound;
 	private Music music;
 
@@ -77,9 +74,33 @@ public class Principal extends Game {
 
 	private Box2DDebugRenderer rend;
 	//----------------------------------
+
+	/**
+	 * El batchtexto para escribir texto en el juego
+	 */
+	private SpriteBatch batchTexto;
+	/**
+	 * El texto en pantalla fondo
+	 */
+	private BitmapFont textoPantalla;
+
+
+
+
+
 	@Override
 	public void create() {
 	batch=new SpriteBatch();
+
+		batchTexto = new SpriteBatch();
+		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fuente/arial.ttf"));
+		FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+		parameter.size = 20;
+		parameter.borderColor=new Color(0.1f,0.1f,0.1f,1);
+		parameter.borderWidth=3f;
+		parameter.incremental=true;
+		textoPantalla = generator.generateFont(parameter);
+
 
 		world= new World(new Vector2(0, -10), true);
 		suelos=new ArrayList<Body>();
@@ -88,10 +109,11 @@ public class Principal extends Game {
 
 
 
+
 		float w = Gdx.graphics.getWidth(); //Obtenemos la anchura de nuestra pantalla en pixels
 		float h = Gdx.graphics.getHeight(); //Obtenemos la atura de nuestra pantalla en pixels
 		///-----------------------------------
-		manager=new Manager();
+
 
 		pincho=new ArrayList<Pincho>();
 
@@ -267,6 +289,9 @@ public class Principal extends Game {
 
 
 		world.step(Gdx.graphics.getDeltaTime(), 6, 2);
+
+
+
 		batch.begin();
 
 		//hacemos las funciones del jugador
@@ -287,7 +312,11 @@ public class Principal extends Game {
 
 		batch.end();
 
-	//	System.out.println(jugador.getSprite().getX()+" y: "+jugador.getSprite().getY()+" cuerpo x: "+jugador.getCuerpo().getPosition().x+" y "+jugador.getCuerpo().getPosition().y);
+
+
+		batchTexto.begin();
+		textoPantalla.draw(batchTexto,"Puntuacion: "+jugador.getPuntuacion(),70,Gdx.graphics.getHeight()/30,Gdx.graphics.getWidth()/30,1,false);
+		batchTexto.end();
 
 		camera.update();
 		if (jugador.isVivo()==false){
