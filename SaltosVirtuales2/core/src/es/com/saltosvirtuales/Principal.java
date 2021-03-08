@@ -62,6 +62,7 @@ public class Principal extends Game {
 	 */
 	private ArrayList<Body> suelos;
 	private ArrayList<Body> caida;
+	private ArrayList<Body> win;
 
 //-------------------------------------------------
 
@@ -83,14 +84,14 @@ public class Principal extends Game {
 		world= new World(new Vector2(0, -10), true);
 		suelos=new ArrayList<Body>();
 		caida=new ArrayList<Body>();
+		win =new ArrayList<Body>();
 
-		//	stage=new Stage(new FillViewport(100,30));
+
 
 		float w = Gdx.graphics.getWidth(); //Obtenemos la anchura de nuestra pantalla en pixels
 		float h = Gdx.graphics.getHeight(); //Obtenemos la atura de nuestra pantalla en pixels
 		///-----------------------------------
 		manager=new Manager();
-	//	Gdx.input.setInputProcessor(stage);//añadimos a nuestro Stagee el metodo de entrada
 
 		pincho=new ArrayList<Pincho>();
 
@@ -108,7 +109,7 @@ public class Principal extends Game {
 		pincho.add(new Pincho(world,444f,15));
 
 
-		jugador=new ActorJugador(world,pincho,suelos,caida);
+		jugador=new ActorJugador(world,pincho,suelos,caida,win);
 
 
 
@@ -197,6 +198,20 @@ public class Principal extends Game {
 			propiedadesRectangulo.type = BodyDef.BodyType.StaticBody;
 			Body rectanguloSuelo = world.createBody(propiedadesRectangulo);
 			caida.add(rectanguloSuelo);
+			FixtureDef propiedadesFisicasRectangulo=new FixtureDef();
+			Shape formaRectanguloSuelo=
+					getRectangle((RectangleMapObject)objeto);
+			propiedadesFisicasRectangulo.shape = formaRectanguloSuelo;
+			propiedadesFisicasRectangulo.density = 1f;
+			rectanguloSuelo.createFixture(propiedadesFisicasRectangulo);
+
+
+		}
+		for (MapObject objeto:map.getLayers().get("Win").getObjects()){
+			BodyDef propiedadesRectangulo= new BodyDef(); //Establecemos las propiedades del cuerpo
+			propiedadesRectangulo.type = BodyDef.BodyType.StaticBody;
+			Body rectanguloSuelo = world.createBody(propiedadesRectangulo);
+			win.add(rectanguloSuelo);
 			FixtureDef propiedadesFisicasRectangulo=new FixtureDef();
 			Shape formaRectanguloSuelo=
 					getRectangle((RectangleMapObject)objeto);
@@ -302,7 +317,7 @@ public class Principal extends Game {
 					jugador.setPuntuacion((byte) (jugador.getPuntuacion() + 1));
 					System.out.println("Recogistes una moneda");
 					objeto.setMostrar(false);
-					//jugador.getPuntuacion();
+					System.out.println(jugador.getPuntuacion());
 				}
 
 			}
