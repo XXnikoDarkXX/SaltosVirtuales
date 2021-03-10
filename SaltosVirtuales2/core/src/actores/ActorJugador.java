@@ -42,9 +42,10 @@ public class ActorJugador extends Actor {
 
     private boolean saltando,masSalto;
     private boolean estaEnElSuelo;
-    private boolean vivo;
+    private boolean vivo,pararTiempo;
     private boolean inmortalidad;//variable para controlar la inmortalidad
     private byte puntuacion;
+    private Body pinchoDestruido;
 
     public  ActorJugador(World m, final ArrayList<Pincho> pincho, final ArrayList<Body>suelos,final ArrayList<Body>caida,final ArrayList<Body>win){
         //  addListener(new Teclado(this));
@@ -112,10 +113,16 @@ public class ActorJugador extends Actor {
                 //Buscamos si en algunos de los pinchos hemos colisionado
                 for (int i = 0; i < pincho.size(); ++i) {
                     if (pincho.get(i).getCuerpo()==a&&b==cuerpo){
-                        //controlamos si tenemos la inmortalidad
+                    /*    if (inmortalidad==true){
+                           pinchoDestruido= devuelvePinchoBody(pincho.get(i).getCuerpo());
 
-                        vivo = false;
-                        System.out.println("mori cierto");
+                        }else {
+*/
+                            //controlamos si tenemos la inmortalidad
+
+                            vivo = false;
+                            System.out.println("mori cierto");
+                     //   }
 
                     }
                 }
@@ -206,15 +213,17 @@ public class ActorJugador extends Actor {
             masSalto=false;
             salto();
         }
+           /* if (this.pinchoDestruido!=null) {
+                mundo.destroyBody(pinchoDestruido);
+              pinchoDestruido=null;
+              inmortalidad=false;
+            }*/
+
 
         //si estamos vivo seguiremos avanzando
-        if (vivo) {
-            float rapidezY = this.cuerpo.getLinearVelocity().y;
-           cuerpo.setLinearVelocity(Constantes.PLAYER_SPEED, rapidezY);
-        }else{
-         //   vivo=true;
-           // cuerpo.setTransform(3,4,cuerpo.getAngle());
-            System.out.println(" x : "+sprite.getX()+" Y "+sprite.getY());
+
+        if (vivo==true){
+            avanzar(0f);
         }
 
         if (saltando){
@@ -258,6 +267,13 @@ public class ActorJugador extends Actor {
         return vivo;
     }
 
+    public boolean isPararTiempo() {
+        return pararTiempo;
+    }
+
+    public void setPararTiempo(boolean pararTiempo) {
+        this.pararTiempo = pararTiempo;
+    }
 
     public Sprite getSprite() {
         return sprite;
@@ -271,8 +287,12 @@ public class ActorJugador extends Actor {
         return cuerpo;
     }
 
-    public World getMundo() {
-        return mundo;
+    public Body getPinchoDestruido() {
+        return pinchoDestruido;
+    }
+
+    public void setPinchoDestruido(Body pinchoDestruido) {
+        this.pinchoDestruido = pinchoDestruido;
     }
 
     public boolean isInmortalidad() {
@@ -283,9 +303,6 @@ public class ActorJugador extends Actor {
         this.puntuacion = puntuacion;
     }
 
-    public void setSaltando(boolean saltando) {
-        this.saltando = saltando;
-    }
 
 
     public void setInmortalidad(boolean inmortalidad) {
@@ -296,13 +313,7 @@ public class ActorJugador extends Actor {
         this.vivo = vivo;
     }
 
-    public void setEstaEnElSuelo(boolean estaEnElSuelo) {
-        this.estaEnElSuelo = estaEnElSuelo;
-    }
 
-    public void setCuerpo(Body cuerpo) {
-        this.cuerpo = cuerpo;
-    }
 
     public void setMasSalto(boolean masSalto) {
         this.masSalto = masSalto;
@@ -318,10 +329,7 @@ public class ActorJugador extends Actor {
     }
 
 
-    public void limpiarMovimiento(){
 
-        this.movimientosActivos=new HashSet<Movimiento>();
-    }
     private void mover() {
         if (movimientosActivos.contains(Movimiento.SALTO)) {
 
@@ -330,12 +338,26 @@ public class ActorJugador extends Actor {
 
             this.salto();
         }
+        if (movimientosActivos.contains(Movimiento.PARAR)){
+            avanzar(5f);
+
+        }
     }
 
 
 
+    public void avanzar(float jugadorSpeed){
+        if (vivo) {
+            float rapidezY = this.cuerpo.getLinearVelocity().y;
+            cuerpo.setLinearVelocity(Constantes.PLAYER_SPEED-jugadorSpeed, rapidezY);
+        }else{
+
+            System.out.println(" x : "+sprite.getX()+" Y "+sprite.getY());
+        }
+    }
 
 
-
-
+   public Body devuelvePinchoBody(Body b){
+        return b;
+   }
 }

@@ -1,12 +1,15 @@
-package es.com.saltosvirtuales;
+package Teclado;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.scenes.scene2d.actions.RotateByAction;
 
 import java.util.ArrayList;
 
+import Otros.Constantes;
 import actores.ActorJugador;
 import actores.Movimiento;
 import actores.Objeto;
@@ -47,11 +50,25 @@ public class TecladoListener implements InputProcessor {
 
                 break;
 
+            case Input.Keys.F:
+                jugador.setVivo(false);
+                break;
+
 
             case Input.Keys.D:
-                this.jugador.setVivo(false);
-                System.out.println("si lo pulsaste");
+
+                if (jugador.isPararTiempo()){
+
+
+              jugador.iniciarMovimiento(Movimiento.PARAR);
+            jugador.getCuerpo().setType(BodyDef.BodyType.StaticBody);
+                }
                 break;
+
+
+
+        //public static final float PLAYER_SPEED=5f;
+
 
         }
         return false;
@@ -66,7 +83,18 @@ public class TecladoListener implements InputProcessor {
                 jugador.finalizarMovimiento(Movimiento.SALTO);
                 break;
 
+            case Input.Keys.D:
+                jugador.finalizarMovimiento(Movimiento.PARAR);
+                jugador.getCuerpo().setType(BodyDef.BodyType.DynamicBody);
+
+                jugador.setPararTiempo(false);
+                break;
+
+
+
         }
+
+
         return false;
     }
 
@@ -112,26 +140,7 @@ public class TecladoListener implements InputProcessor {
     }
 
 
-    /**
-     * Funcion para saber recoger objetos
-     * @param
-     * @param objeto el objeto
-     */
-   /* public void checkCollision(ActorJugador jugador, Objeto objeto) {
-        if(Intersector.overlaps(jugador.getSprite().getBoundingRectangle(), objeto.getSprite().getBoundingRectangle())){
-            if(objeto.getNombreObjeto().equalsIgnoreCase("moneda")){
-               jugador.setPuntuacion((byte) (jugador.getPuntuacion()+1));
-                System.out.println("ha colisionado un objeto");
-            }
-        }
-        objeto.setMostrar(false);
-    }
 
 
-    public void checkCollision(ActorJugador jugador, ArrayList<Objeto>objetos) {
-        for(Objeto spriteGroup : objetos) {
-            checkCollision(jugador, spriteGroup);
-        }
-    }*/
 
 }

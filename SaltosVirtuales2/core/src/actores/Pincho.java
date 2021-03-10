@@ -65,4 +65,7 @@ public class Pincho extends Actor {
     public void destruirCuerpo(){
         mundo.destroyBody(cuerpo);
     }
+
+
+
 }
