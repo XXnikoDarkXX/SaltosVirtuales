@@ -36,6 +36,7 @@ import Teclado.TecladoListener;
 import actores.ActorJugador;
 import actores.Objeto;
 import actores.Pincho;
+import basededatos.BaseDeDatos;
 import es.com.saltosvirtuales.Principal;
 
 public class PantallaJuego extends BaseScreen {
@@ -44,7 +45,7 @@ public class PantallaJuego extends BaseScreen {
     private OrthographicCamera camera;
     private static int WIDTH; //Aquí almacenaremos la anchura en tiles
     private static int HEIGHT; //Aquí almacenaremos la altura en
-    private Principal juego;
+
 
 
 
@@ -73,6 +74,8 @@ public class PantallaJuego extends BaseScreen {
     private World world;
     private ActorJugador jugador;
     private Sound jumpSound, dieSound;
+    private String titulo;
+
     private Music music;
 
     private ArrayList<Pincho> pincho;
@@ -89,10 +92,15 @@ public class PantallaJuego extends BaseScreen {
      * El texto en pantalla fondo
      */
     private BitmapFont textoPantalla;
+    private BaseDeDatos bd;
+
 
 
     public PantallaJuego(Principal game) {
         super(game);
+      bd=  game.getBd();
+
+
 
     }
 
@@ -304,14 +312,34 @@ public class PantallaJuego extends BaseScreen {
 
 
         batchTexto.begin();
-        textoPantalla.draw(batchTexto,"Puntuacion: "+jugador.getPuntuacion(),70,Gdx.graphics.getHeight()/30,Gdx.graphics.getWidth()/30,1,false);
+
+         switch (bd.cargarMuertes()){
+           case 0:
+               titulo="pro";
+               break;
+           case 1:
+               titulo="noob";
+               break;
+           case 3:
+               titulo="lammer";
+               break;
+           case 5:
+               titulo="fracaso";
+               break;
+       }
+
+        textoPantalla.draw(batchTexto,"Muertes: "+bd.cargarMuertes()+" Eres un "+titulo,150,-Gdx.graphics.getHeight()/30+Gdx.graphics.getHeight(),Gdx.graphics.getWidth()/30,1,false);
+        textoPantalla.draw(batchTexto,"Puntuacion: "+bd.cargarPuntuacion(),70,Gdx.graphics.getHeight()/30,Gdx.graphics.getWidth()/30,1,false);
+
         batchTexto.end();
 
         camera.update();
         if (jugador.isVivo()==false){
             music.stop();
+            bd.guardarMuertes(bd.cargarMuertes()+1);
 
             restablecer();
+
 
         }
         rend.render(world, camera.combined);
@@ -371,7 +399,8 @@ public class PantallaJuego extends BaseScreen {
                     jugador.setPuntuacion((byte) (jugador.getPuntuacion() + 1));
                     System.out.println("Recogistes una moneda");
                     objeto.setMostrar(false);
-                    System.out.println(jugador.getPuntuacion());
+                    bd.GuardarPuntuacion(jugador.getPuntuacion());
+
                 }
 
             }
@@ -380,12 +409,6 @@ public class PantallaJuego extends BaseScreen {
                     jugador.setInmortalidad(true);
 
                     objeto.setMostrar(false);
-
-
-
-
-
-
 
                 }
 
@@ -396,12 +419,6 @@ public class PantallaJuego extends BaseScreen {
                     jugador.setPararTiempo(true);
 
                     objeto.setMostrar(false);
-
-
-
-
-
-
 
                 }
 
@@ -462,12 +479,11 @@ public class PantallaJuego extends BaseScreen {
     private void restablecer(){
         music = Gdx.audio.newMusic(Gdx.files.internal("audio/song.ogg"));
         jugador.setVivo(true);
-        jugador.setPuntuacion((byte)0);
+      //  jugador.setPuntuacion((byte)0);
         jugador.getCuerpo().setTransform(5,6.5f,jugador.getCuerpo().getAngle());
         for (int i=0;i<objetos.size();i++){
-            objetos.get(i).setMostrar(true);
+         //   objetos.get(i).setMostrar(true);
         }
-        ArrayList<Pincho>pinchosAuxiliar=new ArrayList<Pincho>();
 
 
 /*

@@ -3,6 +3,8 @@ package es.com.saltosvirtuales.desktop;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+
+import BaseDatosEscritorio.BaseDatosEscritorio;
 import es.com.saltosvirtuales.Principal;
 
 public class DesktopLauncher {
@@ -13,6 +15,6 @@ public class DesktopLauncher {
 		config.height=500;
 		config.resizable=false;
 		config.title="Saltos Virtuales";
-		new LwjglApplication(new Principal(), config);
+		new LwjglApplication(new Principal(new BaseDatosEscritorio()), config);
 	}
 }

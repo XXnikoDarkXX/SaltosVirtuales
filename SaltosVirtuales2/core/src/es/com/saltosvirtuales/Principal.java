@@ -5,12 +5,19 @@ import com.badlogic.gdx.Game;
 
 import Pantallas.PantallaJuego;
 import Pantallas.PantallaMenu;
+import basededatos.BaseDeDatos;
 
 public class Principal extends Game {
 
 	private PantallaJuego pantallaJuego;
 
-	private PantallaMenu pantallaMenu;
+	private BaseDeDatos bd;
+
+
+	public Principal(BaseDeDatos bd){
+		this.bd=bd;
+
+	}
 
 	@Override
 	public void create() {
@@ -22,7 +29,9 @@ public class Principal extends Game {
 		return pantallaJuego;
 	}
 
-
+	public BaseDeDatos getBd() {
+		return bd;
+	}
 }
 
 

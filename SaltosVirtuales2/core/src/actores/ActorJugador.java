@@ -45,6 +45,7 @@ public class ActorJugador extends Actor {
     private boolean vivo,pararTiempo;
     private boolean inmortalidad;//variable para controlar la inmortalidad
     private byte puntuacion;
+
     private Body pinchoDestruido;
 
     public  ActorJugador(World m, final ArrayList<Pincho> pincho, final ArrayList<Body>suelos,final ArrayList<Body>caida,final ArrayList<Body>win){
@@ -52,6 +53,7 @@ public class ActorJugador extends Actor {
 
 
         puntuacion=0;
+
         movimientosActivos=new HashSet<Movimiento>();
 
         this.mundo=m;
@@ -274,6 +276,8 @@ public class ActorJugador extends Actor {
     public void setPararTiempo(boolean pararTiempo) {
         this.pararTiempo = pararTiempo;
     }
+
+
 
     public Sprite getSprite() {
         return sprite;
