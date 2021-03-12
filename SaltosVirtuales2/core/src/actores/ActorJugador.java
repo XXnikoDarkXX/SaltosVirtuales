@@ -1,9 +1,14 @@
 package actores;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -43,8 +48,10 @@ public class ActorJugador extends Actor {
     private boolean saltando,masSalto;
     private boolean estaEnElSuelo;
     private boolean vivo,pararTiempo;
+    private boolean ganar;
     private boolean inmortalidad;//variable para controlar la inmortalidad
     private byte puntuacion;
+
 
     private Body pinchoDestruido;
 
@@ -62,7 +69,7 @@ public class ActorJugador extends Actor {
 
 
         //desde el principio
-      sprite.setBounds(5,6.5f,1f,1.5f);
+     sprite.setBounds(5,6.5f,1f,1.5f);
         //Parte 1 hacia arriba
        // sprite.setBounds(90,6.5f,1f,1.5f);
     //parte 1 hacia abajo invierno
@@ -78,7 +85,7 @@ public class ActorJugador extends Actor {
  //       sprite.setBounds(353.44974f, 2.0149999f,1f,1.5f);
 
        //parte rojo  con moneda
-        // sprite.setBounds(430f, 14.3f,1f,1.5f);
+    //    sprite.setBounds(430f, 15.3f,1f,1.5f);
 
         this.propiedadesCuerpo=new BodyDef();//Establecemos las propiedades del cuero;
         propiedadesCuerpo.fixedRotation = true;//Cuerpo no rote
@@ -157,7 +164,13 @@ public class ActorJugador extends Actor {
 
 
                 }
+                if (win.contains(a)&&b==cuerpo){
+                    ganar=true;
+                }
 
+                if (win.contains(b)&&a==cuerpo){
+                    ganar=true;
+                }
 
 
             }
@@ -297,6 +310,11 @@ public class ActorJugador extends Actor {
 
     public boolean isInmortalidad() {
         return inmortalidad;
+    }
+
+
+    public boolean isGanar() {
+        return ganar;
     }
 
     public void setPuntuacion(byte puntuacion) {

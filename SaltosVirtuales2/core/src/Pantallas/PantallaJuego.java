@@ -34,6 +34,7 @@ import java.util.ArrayList;
 
 import Teclado.TecladoListener;
 import actores.ActorJugador;
+import actores.Jugador;
 import actores.Objeto;
 import actores.Pincho;
 import basededatos.BaseDeDatos;
@@ -176,11 +177,12 @@ public class PantallaJuego extends BaseScreen {
         //relojes
 
         objetos.add(new Objeto(world, texturaReloj, "reloj", 328, 4, 0.7f, 0.8f, 3, 3));
-
+        objetos.add(new Objeto(world,texturaReloj,"reloj",44,6,0.7f,0.8f,215,10));
 
         //tiempo
-
         objetos.add(new Objeto(world, texturaParada, "parada", 10, 5, 3, 2));
+
+
 
         teclin = new TecladoListener(jugador);
         Gdx.input.setInputProcessor(teclin);
@@ -331,14 +333,20 @@ public class PantallaJuego extends BaseScreen {
         textoPantalla.draw(batchTexto,"Muertes: "+bd.cargarMuertes()+" Eres un "+titulo,150,-Gdx.graphics.getHeight()/30+Gdx.graphics.getHeight(),Gdx.graphics.getWidth()/30,1,false);
         textoPantalla.draw(batchTexto,"Puntuacion: "+bd.cargarPuntuacion(),70,Gdx.graphics.getHeight()/30,Gdx.graphics.getWidth()/30,1,false);
 
+        if (jugador.isGanar()){
+            textoPantalla.draw(batchTexto,"Ganasteeee!!",150,Gdx.graphics.getHeight()/2,Gdx.graphics.getWidth()/2,1,false);
+
+            music.stop();
+        }
+
         batchTexto.end();
 
         camera.update();
         if (jugador.isVivo()==false){
             music.stop();
             bd.guardarMuertes(bd.cargarMuertes()+1);
-
-            restablecer();
+            System.out.println("Posicion X: "+ jugador.getCuerpo().getPosition().x+" Posicion y "+jugador.getCuerpo().getPosition().y);
+            //restablecer();
 
 
         }
