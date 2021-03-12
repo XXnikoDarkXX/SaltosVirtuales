@@ -47,8 +47,6 @@ public class PantallaJuego extends BaseScreen {
     private static int HEIGHT; //Aquí almacenaremos la altura en
 
 
-
-
     //
     private ArrayList<Objeto> objetos;
     private ArrayList<String> RutasMusica;
@@ -482,7 +480,9 @@ public class PantallaJuego extends BaseScreen {
       //  jugador.setPuntuacion((byte)0);
         jugador.getCuerpo().setTransform(5,6.5f,jugador.getCuerpo().getAngle());
         for (int i=0;i<objetos.size();i++){
-         //   objetos.get(i).setMostrar(true);
+            if (!objetos.get(i).getNombreObjeto().equalsIgnoreCase("moneda")) {
+                objetos.get(i).setMostrar(true);
+            }
         }
 
 
