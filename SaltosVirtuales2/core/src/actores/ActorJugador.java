@@ -115,16 +115,16 @@ public class ActorJugador extends Actor {
                 //Buscamos si en algunos de los pinchos hemos colisionado
                 for (int i = 0; i < pincho.size(); ++i) {
                     if (pincho.get(i).getCuerpo()==a&&b==cuerpo){
-                    /*    if (inmortalidad==true){
+                        if (inmortalidad==true){
                            pinchoDestruido= devuelvePinchoBody(pincho.get(i).getCuerpo());
 
                         }else {
-*/
+
                             //controlamos si tenemos la inmortalidad
 
                             vivo = false;
                             System.out.println("mori cierto");
-                     //   }
+                       }
 
                     }
                 }
@@ -133,11 +133,7 @@ public class ActorJugador extends Actor {
                 if (suelos.contains(a)&&b==cuerpo){
                     saltando=false;
                     estaEnElSuelo=true;
-                    System.out.println("contiene suelo");
-                   /* if (Gdx.input.justTouched()){
-                        System.out.println("toco");
-                        masSalto=true;
-                    }*/
+
 
                 }
                 //mediante este if comprobamos que estamos en el suelo y podemos saltar al pulsar la tecla a
@@ -215,12 +211,12 @@ public class ActorJugador extends Actor {
             masSalto=false;
             salto();
         }
-           /* if (this.pinchoDestruido!=null) {
+    /*   if    (this.pinchoDestruido!=null) {
                 mundo.destroyBody(pinchoDestruido);
               pinchoDestruido=null;
               inmortalidad=false;
-            }*/
-
+            }
+            */
 
         //si estamos vivo seguiremos avanzando
 

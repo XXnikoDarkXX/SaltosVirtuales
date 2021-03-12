@@ -1,6 +1,6 @@
 package basededatos;
 
-public interface BaseDeDatos {
+public interface BaseDeDatos{
 
     public void GuardarPuntuacion (int puntuacion);
 

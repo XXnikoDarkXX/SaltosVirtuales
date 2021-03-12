@@ -291,6 +291,8 @@ public class PantallaJuego extends BaseScreen {
 
         //hacemos las funciones del jugador
         jugador.act(Gdx.graphics.getDeltaTime());
+
+        //En caso de que algun objeto colisione con el jugador
         for (int i = 0; i < objetos.size(); ++i) {
             objetos.get(i).draw(batch,0);
             checkCollision(jugador, objetos.get(i));
@@ -480,13 +482,13 @@ public class PantallaJuego extends BaseScreen {
       //  jugador.setPuntuacion((byte)0);
         jugador.getCuerpo().setTransform(5,6.5f,jugador.getCuerpo().getAngle());
         for (int i=0;i<objetos.size();i++){
-            if (!objetos.get(i).getNombreObjeto().equalsIgnoreCase("moneda")) {
+            if (!objetos.get(i).getNombreObjeto().equalsIgnoreCase("moneda")&&(!objetos.get(i).getNombreObjeto().equalsIgnoreCase("calavera"))) {
                 objetos.get(i).setMostrar(true);
             }
         }
 
 
-/*
+
         for (int i=0;i<pincho.size();i++){
             if (pincho.get(i).getCuerpo()!=null){
                 world.destroyBody(pincho.get(i).getCuerpo());
@@ -508,6 +510,6 @@ public class PantallaJuego extends BaseScreen {
         pincho.add(new Pincho(world, 321, 3.2f));
         pincho.add(new Pincho(world, 346.40668f, 2.7637267f));
         pincho.add(new Pincho(world, 444f, 15));
-*/
+
     }
 }
