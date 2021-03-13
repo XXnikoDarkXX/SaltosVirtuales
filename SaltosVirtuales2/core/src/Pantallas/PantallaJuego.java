@@ -1,8 +1,6 @@
 package Pantallas;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
@@ -28,13 +26,11 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 
 import java.util.ArrayList;
 
 import Teclado.TecladoListener;
 import actores.ActorJugador;
-import actores.Jugador;
 import actores.Objeto;
 import actores.Pincho;
 import basededatos.BaseDeDatos;
@@ -46,12 +42,9 @@ public class PantallaJuego extends BaseScreen {
     private OrthographicCamera camera;
     private static int WIDTH; //Aquí almacenaremos la anchura en tiles
     private static int HEIGHT; //Aquí almacenaremos la altura en
-
-
     //
     private ArrayList<Objeto> objetos;
     private ArrayList<String> RutasMusica;
-
     //
 
     public static final float unitScale = 1 / 16f; //Nos servirá para establecer que la pantalla se divide en tiles de 32 pixeles;
@@ -68,15 +61,16 @@ public class PantallaJuego extends BaseScreen {
     private ArrayList<Body> caida;
     private ArrayList<Body> win;
 
+
 //-------------------------------------------------
 
     private World world;
     private ActorJugador jugador;
-    private Sound jumpSound, dieSound;
     private String titulo;
 
     private Music music;
 
+    private boolean controlSonido;
     private ArrayList<Pincho> pincho;
     private Teclado.TecladoListener teclin;
 
@@ -150,6 +144,7 @@ public class PantallaJuego extends BaseScreen {
 
         //Creo la musica
         music = Gdx.audio.newMusic(Gdx.files.internal("audio/song.ogg"));
+
 
 
         //Creo los objetos que tendra el mapa
@@ -273,6 +268,7 @@ public class PantallaJuego extends BaseScreen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         //camera.update(); //Colocamos la Cámara.
 
+
         if (jugador.getPinchoDestruido()!=null) {
             world.destroyBody(jugador.getPinchoDestruido());
             jugador.setPinchoDestruido(null);
@@ -337,6 +333,7 @@ public class PantallaJuego extends BaseScreen {
             textoPantalla.draw(batchTexto,"Ganasteeee!!",150,Gdx.graphics.getHeight()/2,Gdx.graphics.getWidth()/2,1,false);
 
             music.stop();
+
         }
 
         batchTexto.end();
@@ -346,7 +343,7 @@ public class PantallaJuego extends BaseScreen {
             music.stop();
             bd.guardarMuertes(bd.cargarMuertes()+1);
             System.out.println("Posicion X: "+ jugador.getCuerpo().getPosition().x+" Posicion y "+jugador.getCuerpo().getPosition().y);
-            //restablecer();
+            restablecer();
 
 
         }

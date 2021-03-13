@@ -9,4 +9,5 @@ dependencies {
     compile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
     compile 'com.readystatesoftware.sqliteasset:sqliteassethelper:2.0.1'
     compile fileTree(dir: 'libs', include: ['*.jar'])
+
 }

@@ -29,34 +29,91 @@ import java.util.HashSet;
 
 import Otros.Constantes;
 
+/**
+ * @author nicoc
+ * Clase Actor Jugador
+ * Clase que nos brinda el jugador principal desde aqui manipularemos las colisiones, ademas de sincronizar los movimientos del jugador
+ *
+ *
+ */
 public class ActorJugador extends Actor {
 
-    protected Sprite sprite;//el sprite
+    /**
+     * Sprite del jugador
+     */
+    protected Sprite sprite;
+
+    /**
+     * mundo del jugador
+     */
     private World mundo; //el mundo
+    /**
+     * BodyDef del jugador
+     */
     private BodyDef propiedadesCuerpo;
+    /**
+     * Body del jugador
+     */
     private Body cuerpo;//el cuerpo
+    /**
+     * FixtureDef del jugador
+     */
     private FixtureDef propiedadesFisicaCuerpo;
-
-
-
-    //
+    /**
+     * Fixture del jugador
+     */
     private Fixture fixture;
+    /**
+     * hashSet de Movimiento
+     */
     private HashSet<Movimiento> movimientosActivos;
-
-    //
-
-    private boolean saltando,masSalto;
+    /**
+     * Variable para saber si esta en esta en el salto el jugador
+     */
+    private boolean saltando;
+    /**
+     * Variable para controlar los saltos
+     */
+    private boolean masSalto;
+    /**
+     * Variable para saber si esta en el suelo
+     */
     private boolean estaEnElSuelo;
-    private boolean vivo,pararTiempo;
+    /**
+     * Variable para saber si esta vivo el jugador
+     */
+    private boolean vivo;
+    /**
+     * Variable saber si puede pararTiempo el jugador
+     */
+    private boolean pararTiempo;
+    /**
+     * Variable para saber si hemos ganado
+     */
     private boolean ganar;
+    /**
+     * Variable para saber si somos  inmortales
+     */
     private boolean inmortalidad;//variable para controlar la inmortalidad
+    /**
+     * Variable con la puntuacion del jugador
+     */
     private byte puntuacion;
-
-
+    /**
+     * Variable para controlar el cuerpo del pincho
+     */
     private Body pinchoDestruido;
 
+
+    /**
+     * Constructor por defecto de Actor Jugador
+     * @param m mundo del jugador
+     * @param pincho Array de pinchos para controlar los choques con el jugador
+     * @param suelos suelo donde pisa el jugador
+     * @param caida array de caida en caso de que caiga el jugador
+     * @param win bloque final del mapa para saber que ha ganado
+     */
     public  ActorJugador(World m, final ArrayList<Pincho> pincho, final ArrayList<Body>suelos,final ArrayList<Body>caida,final ArrayList<Body>win){
-        //  addListener(new Teclado(this));
 
 
         puntuacion=0;
@@ -117,11 +174,10 @@ public class ActorJugador extends Actor {
                 Body b=contact.getFixtureB().getBody();
 
                 //Si hemos colisionado entonces muero
-                //  if (pincho.getCuerpo()==a&&b==cuerpo){
-
                 //Buscamos si en algunos de los pinchos hemos colisionado
                 for (int i = 0; i < pincho.size(); ++i) {
                     if (pincho.get(i).getCuerpo()==a&&b==cuerpo){
+                        //si somos inmortales destruimos el body del pincho  y asi podremos atraversarlo sin morir
                         if (inmortalidad==true){
                            pinchoDestruido= devuelvePinchoBody(pincho.get(i).getCuerpo());
 
@@ -198,10 +254,16 @@ public class ActorJugador extends Actor {
     public void draw(Batch batch, float parentAlpha) {
         mover();
 
-        //Esta cuenta hace falta por lo de la media altura. Ese absurdo cálculo...
-        sprite.setPosition(cuerpo.getPosition().x-sprite.getWidth()/2,cuerpo.getPosition().y-sprite.getHeight()/2);
-        //Sprite quiere la rotación en grados, el cuerpo la da en radianes. Esta constante convierte de uno a otro.
-        //sprite.setRotation(MathUtils.radiansToDegrees*cuerpo.getAngle());
+        super.draw(batch, parentAlpha);
+        mover();
+        sprite.setPosition(cuerpo.getPosition().x-sprite.getWidth()/2,
+                cuerpo.getPosition().y-sprite.getHeight()/2);
+        this.setPosition(cuerpo.getPosition().x,
+                cuerpo.getPosition().y);
+        sprite.setScale(getScaleX(),getScaleY());
+        sprite.setRotation(cuerpo.getAngle());
+        this.setRotation(cuerpo.getAngle());
+        sprite.setColor(getColor().r,getColor().g,getColor().b,getColor().a);
         sprite.draw(batch);
 
     }
@@ -240,14 +302,6 @@ public class ActorJugador extends Actor {
         if (saltando){
             cuerpo.applyForceToCenter(0,-Constantes.IMPULSE_JUMP * 1.15f,true);
 
-            //TODO no me rota
-    /*
-            RotateByAction rotarDcha=new RotateByAction();
-
-            rotarDcha.setDuration(0.3f);
-            sprite.setRotation(-13);
-            this.addAction(rotarDcha);
-*/
         }
 
 
@@ -265,6 +319,8 @@ public class ActorJugador extends Actor {
 
         }
     }
+
+
 
     public boolean isEstaEnElSuelo() {
         return estaEnElSuelo;
@@ -373,6 +429,9 @@ public class ActorJugador extends Actor {
             System.out.println(" x : "+sprite.getX()+" Y "+sprite.getY());
         }
     }
+
+
+
 
 
    public Body devuelvePinchoBody(Body b){
