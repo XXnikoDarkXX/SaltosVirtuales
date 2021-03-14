@@ -23,6 +23,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -167,6 +168,10 @@ public class ActorJugador extends Actor {
 
 
         mundo.setContactListener(new ContactListener() {
+            /**
+             * Funcion para hacer acciones cuando colisionan con otros body
+             * @param contact body con el que colisionamos
+             */
             @Override
             public void beginContact(Contact contact) {
 
@@ -250,6 +255,11 @@ public class ActorJugador extends Actor {
 
     }
 
+    /**
+     * Funcion para dibujar los sprite
+     * @param batch batch que usamos para dibujar
+     * @param parentAlpha transparencia del sprite
+     */
     @Override
     public void draw(Batch batch, float parentAlpha) {
         mover();
@@ -272,13 +282,20 @@ public class ActorJugador extends Actor {
      * Funcion para el seguimiento de la camara
      * @param camara la camara
      */
-    public void seguir(OrthographicCamera camara){
-        camara.position.x=this.cuerpo.getPosition().x;
-        camara.position.y=this.cuerpo.getPosition().y;
-        //   sprite.setPosition(this.cuerpo.getPosition().x,this.cuerpo.getPosition().y);
+    public void seguir(OrthographicCamera camara,long momento){
+
+
+                if(System.currentTimeMillis()-momento<1500) {
+                    camara.position.x = this.cuerpo.getPosition().x;
+                    camara.position.y = this.cuerpo.getPosition().y;
+                }
+           sprite.setPosition(this.cuerpo.getPosition().x,this.cuerpo.getPosition().y);
     }
 
-
+    /**
+     * Funcion act que es donde metemos las acciones del jugador
+     * @param delta los frames
+     */
     @Override
     public void act(float delta) {
         //Iniciar un salto si hemos tocado la pantalla
@@ -308,7 +325,9 @@ public class ActorJugador extends Actor {
 
     }
 
-
+    /**
+     * Funcion para saltar
+     */
     public void salto(){
         if (!saltando&&vivo){
             estaEnElSuelo=false;
@@ -321,89 +340,145 @@ public class ActorJugador extends Actor {
     }
 
 
-
+    /**
+     * Getter de si esta en el suelo
+     * @return true si esta en el suelo false si no lo esta
+     */
     public boolean isEstaEnElSuelo() {
         return estaEnElSuelo;
     }
 
-    public boolean isSaltando() {
-        return saltando;
-    }
 
+    /**
+     * Getter de vivo
+     * @return true si esta vi
+     */
     public boolean isVivo() {
         return vivo;
     }
 
+    /**
+     * Getter de parar Tiempo
+     * @return true podemos parar tiempo false no podemos parar tiempo
+     */
     public boolean isPararTiempo() {
         return pararTiempo;
     }
 
+    /**
+     * Setter de parar tiempo
+     * @param pararTiempo a cambiar
+     */
     public void setPararTiempo(boolean pararTiempo) {
         this.pararTiempo = pararTiempo;
     }
 
 
-
+    /**
+     * Getter del sprite del jugador
+     * @return el sprite del jugador
+     */
     public Sprite getSprite() {
         return sprite;
     }
 
+    /**
+     * Getter de puntuacion
+     * @return la puntuacion en byte
+     */
     public byte getPuntuacion() {
         return puntuacion;
     }
 
+    /**
+     * Getter de body del cuerpo
+     * @return el cuerop del jugador
+     */
     public Body getCuerpo() {
         return cuerpo;
     }
 
+    /**
+     * Getter del body del pincho que colisionamos
+     * @return el body del pincho que colisionamos
+     */
     public Body getPinchoDestruido() {
         return pinchoDestruido;
     }
 
+    /**
+     * Setter de pincho
+     * @param pinchoDestruido a cambiar
+     */
     public void setPinchoDestruido(Body pinchoDestruido) {
         this.pinchoDestruido = pinchoDestruido;
     }
 
-    public boolean isInmortalidad() {
-        return inmortalidad;
-    }
 
-
+    /**
+     * Getter de ganar
+     * @return true si hemos ganado false si todavia no
+     */
     public boolean isGanar() {
         return ganar;
     }
 
+    /**
+     * Setter de puntuacion
+     * @param puntuacion a cambiar
+     */
     public void setPuntuacion(byte puntuacion) {
         this.puntuacion = puntuacion;
     }
 
 
-
+    /**
+     * Setter de inmortalidad
+     * @param inmortalidad a cambiar
+     */
     public void setInmortalidad(boolean inmortalidad) {
         this.inmortalidad = inmortalidad;
     }
 
+    /**
+     * Setter de vivo
+     * @param vivo a cambiar
+     */
     public void setVivo(boolean vivo) {
         this.vivo = vivo;
     }
 
 
-
+    /**
+     * Setter de masAlto
+     * @param masSalto a cambiar
+     */
     public void setMasSalto(boolean masSalto) {
         this.masSalto = masSalto;
     }
 
+    /**
+     * Funcion para finalizar un movimiento lo que hacemos es remover el movimiento usado de la coleccion
+     * @param p Enumerado Movimiento que pasamos por contructor para luego borrarlo de la coleccion interna
+     */
     public void finalizarMovimiento(Movimiento p){
         this.movimientosActivos.remove(p);
     }
 
+    /**
+     * Funcion para inicar el movimiento añadiendo a la coleccion de movimiento el movimiento pasado por parametro
+     * @param p Enumerado de tipo Movimiento
+     */
     public void iniciarMovimiento(Movimiento p){
 
         this.movimientosActivos.add(p);
     }
 
 
-
+    /**
+     * Funcion para hacer la accion del jugador
+     * Buscamos en la coleccion que es lo que contiene y segun que caso parara o saltara
+     */
     private void mover() {
         if (movimientosActivos.contains(Movimiento.SALTO)) {
 
@@ -419,7 +494,10 @@ public class ActorJugador extends Actor {
     }
 
 
-
+    /**
+     * Funcion para que el jugador avance hacia la derecha
+     * @param jugadorSpeed float pasamos cuanto speed queremos que avance
+     */
     public void avanzar(float jugadorSpeed){
         if (vivo) {
             float rapidezY = this.cuerpo.getLinearVelocity().y;
@@ -431,9 +509,11 @@ public class ActorJugador extends Actor {
     }
 
 
-
-
-
+    /**
+     * Funcion para devolver el body del pincho al que colisiona
+     * @param b Body le pasaremos seguramente el body del pincho
+     * @return un body
+     */
    public Body devuelvePinchoBody(Body b){
         return b;
    }

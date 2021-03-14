@@ -11,18 +11,43 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
+/**
+ * Clase pincho que sirve para dibujar un pincho con su propiedades fisicas
+ * El jugador tendra que saltarlo
+ */
 public class Pincho extends Actor {
-
+    /**
+     * Sprite del pincho
+     */
     protected Sprite sprite;//el sprite
+    /**
+     * Mundo donde se aloja el pincho
+     */
     private World mundo; //el mundo
+    /**
+     * Propiedades del cuerpo del pincho
+     */
     private BodyDef propiedadesCuerpo;
+    /**
+     * Body del pincho
+     */
     private Body cuerpo;//el cuerpo
+    /**
+     * Propiedades Fisicas del cuerpo
+     */
     private FixtureDef propiedadesFisicaCuerpo;
 
-    //
+    /**
+     * Fixture del pincho
+     */
     private Fixture fixture;
-    //
 
+    /**
+     * Constructor del pincho
+     * @param m mundo del pincho
+     * @param x pos x del pincho
+     * @param y pos y del pincho
+     */
     public Pincho(World m, float x, float y){
         this.mundo=m;
         sprite=new Sprite(new Texture("texturas/spike2.png"));
@@ -46,6 +71,11 @@ public class Pincho extends Actor {
 
     }
 
+    /**
+     * Funcion para dibujar el sprite del pincho
+     * @param batch del pincho
+     * @param parentAlpha transparencia del pincho
+     */
     @Override
     public void draw(Batch batch, float parentAlpha) {
         sprite.setPosition(cuerpo.getPosition().x-sprite.getWidth()/2,cuerpo.getPosition().y-sprite.getHeight()/2);
@@ -54,17 +84,23 @@ public class Pincho extends Actor {
         sprite.draw(batch);
     }
 
+    /**
+     * Getter del cuerpo
+     * @return  cuerpo del pincho
+     */
     public Body getCuerpo() {
         return cuerpo;
     }
 
+    /**
+     * Getter del sprite
+     * @return el sprite del pincho
+     */
     public Sprite getSprite() {
         return sprite;
     }
 
-    public void destruirCuerpo(){
-        mundo.destroyBody(cuerpo);
-    }
+
 
 
 

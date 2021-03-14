@@ -36,19 +36,29 @@ import actores.Pincho;
 import basededatos.BaseDeDatos;
 import es.com.saltosvirtuales.Principal;
 
+/**
+ * Clase donde tendremos el juego visualmente, tendremos camaras, el jugador, los pinchos, items escenarios ect
+ * Desde aqui podremos interactuar con el mundo y dibujarlo todo
+ * */
 public class PantallaJuego extends BaseScreen {
-
+    /**
+     * Clase auxiliar para renderizar un mapa
+     */
     private OrthogonalTiledMapRenderer renderer; //Clase auxiliar para renderizar un mapa.
+    /**
+     * Camara del mundo
+     */
     private OrthographicCamera camera;
-    private static int WIDTH; //Aquí almacenaremos la anchura en tiles
-    private static int HEIGHT; //Aquí almacenaremos la altura en
-    //
-    private ArrayList<Objeto> objetos;
-    private ArrayList<String> RutasMusica;
-    //
 
-    public static final float unitScale = 1 / 16f; //Nos servirá para establecer que la pantalla se divide en tiles de 32 pixeles;
-    //private Stage stage;//lo usaremos para dibujar un actor
+    /**
+     * ArrayList de objetos
+     */
+    private ArrayList<Objeto> objetos;
+    /**
+     * Nos servirá para establecer que la pantalla se divide en tiles de 16 pixeles
+     */
+    public static final float unitScale = 1 / 16f; //Nos servirá para establecer que la pantalla se divide en tiles de 16 pixeles;
+
     /**
      * El batch
      */
@@ -58,22 +68,44 @@ public class PantallaJuego extends BaseScreen {
      * Los objetos que actuan como superficies en el juego
      */
     private ArrayList<Body> suelos;
+    /**
+     * ArrayList de caida
+     */
     private ArrayList<Body> caida;
+    /**
+     * ArrayList para saber que hemos ganado
+     */
     private ArrayList<Body> win;
 
 
 //-------------------------------------------------
-
+    /**
+     * World del juego
+     */
     private World world;
+    /**
+     * Jugador
+     */
     private ActorJugador jugador;
+    /**
+     * Titulo que tiene el jugador
+     */
     private String titulo;
-
+    /**
+     * Musica
+     */
     private Music music;
-
-    private boolean controlSonido;
+    /**
+     * ArrayList con todos los pinchos
+     */
     private ArrayList<Pincho> pincho;
+    /**
+     * Teclado
+     */
     private Teclado.TecladoListener teclin;
-
+    /**
+     * Clase auxiliar para saber colisiones de box2d
+     */
     private Box2DDebugRenderer rend;
     //----------------------------------
 
@@ -85,10 +117,16 @@ public class PantallaJuego extends BaseScreen {
      * El texto en pantalla fondo
      */
     private BitmapFont textoPantalla;
+    /**
+     * Base de datos
+     */
     private BaseDeDatos bd;
 
 
-
+    /**
+     * Contructor de pantalla de jugo
+     * @param game clase principal
+     */
     public PantallaJuego(Principal game) {
         super(game);
       bd=  game.getBd();
@@ -97,7 +135,9 @@ public class PantallaJuego extends BaseScreen {
 
     }
 
-
+    /**
+     * Funcion donde mostramos y creamos los objetos, jugadores, pinchos ect
+     */
     @Override
     public void show() {
         batch = new SpriteBatch();
@@ -191,11 +231,8 @@ public class PantallaJuego extends BaseScreen {
 
         camera = new OrthographicCamera(1, 1);//1 metro por  1 metro
 
+         camera.setToOrtho(false, 12, 12);
 
-        WIDTH = ((TiledMapTileLayer) map.getLayers().get(0)).getWidth(); //Obtenemos desde el mapa el número de tiles de ancho de la 1º Capa
-        HEIGHT = ((TiledMapTileLayer) map.getLayers().get(0)).getHeight(); //Obtenemos desde el mapa el número de tiles de alto de la 1º Capa
-        camera.setToOrtho(false, 12, 12);
-        System.out.println(WIDTH + "" + HEIGHT);
         this.rend = new Box2DDebugRenderer();
 
 
@@ -255,12 +292,10 @@ public class PantallaJuego extends BaseScreen {
     }
 
 
-
-
-
-
-
-
+    /**
+     * Funcion pra renderizar el juego
+     * @param delta frames
+     */
     @Override
     public void render(float delta) {
         music.play();
@@ -274,7 +309,8 @@ public class PantallaJuego extends BaseScreen {
             jugador.setPinchoDestruido(null);
             jugador.setInmortalidad(false);
         }
-        jugador.seguir(camera);
+        long momento=System.currentTimeMillis();
+        jugador.seguir(camera,momento);
         renderer.setView(camera); //Establecemos la vista del mundo a través de la cámara.
         renderer.render(); //Renderizamos la vista
         batch.setProjectionMatrix(camera.combined);
@@ -372,6 +408,9 @@ public class PantallaJuego extends BaseScreen {
        dispose();
     }
 
+    /**
+     * Funcion para eliminar espacio memoria
+     */
     @Override
     public void dispose() {
         world.dispose();
@@ -381,6 +420,11 @@ public class PantallaJuego extends BaseScreen {
         rend.dispose();
     }
 
+    /**
+     * Fucnion para sacar polygonShape para los suelos
+     * @param rectangleObject un rectanble objeto que le pasamos
+     * @return un PolygonShape
+     */
     private static PolygonShape getRectangle(RectangleMapObject rectangleObject) {
         Rectangle rectangle = rectangleObject.getRectangle();
         PolygonShape polygon = new PolygonShape();
@@ -393,7 +437,11 @@ public class PantallaJuego extends BaseScreen {
         return polygon;
     }
 
-
+    /**
+     * Funcion para revisar las colisiones que hace el jugador con los objetos
+     * @param jugador jugador
+     * @param  objeto al cual colisiona
+     */
     public void checkCollision(ActorJugador jugador, Objeto objeto) {
         if(Intersector.overlaps(jugador.getSprite().getBoundingRectangle(), objeto.getSprite().getBoundingRectangle())){
             if(objeto.getNombreObjeto().equalsIgnoreCase("moneda")){
@@ -480,7 +528,9 @@ public class PantallaJuego extends BaseScreen {
         }
     }
 
-
+    /**
+     * Funcion para restablecer el juego
+     */
     private void restablecer(){
         music = Gdx.audio.newMusic(Gdx.files.internal("audio/song.ogg"));
         jugador.setVivo(true);

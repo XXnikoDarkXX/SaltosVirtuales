@@ -13,15 +13,28 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import es.com.saltosvirtuales.Principal;
 
+/**
+ * Clase Pantalla Menu
+ */
 public class PantallaMenu extends BaseScreen {
-
+    /**
+     * El escenario
+     */
     private Stage stage;
 
-
+    /**
+     * El skin
+     */
     private Skin skin;
-
+    /**
+     * Boton para play
+     */
     private TextButton play;
 
+    /**
+     * Constructor de PantallaMenu
+     * @param game el Principal
+     */
     public PantallaMenu(final Principal game) {
         super(game);
 
@@ -59,7 +72,9 @@ public class PantallaMenu extends BaseScreen {
     }
 
 
-
+    /**
+     * Mostramos el escenario
+     */
     @Override
     public void show() {
 
@@ -72,13 +87,20 @@ public class PantallaMenu extends BaseScreen {
         Gdx.input.setInputProcessor(null);
     }
 
+    /**
+     * Funcion para limpiar espacio en memoria
+     */
     @Override
     public void dispose() {
-        // Dispose assets.
+
         stage.dispose();
         skin.dispose();
     }
 
+    /**
+     * Funcion del renderizado
+     * @param delta frames
+     */
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0.4f,0.5f,0.8f,1f);

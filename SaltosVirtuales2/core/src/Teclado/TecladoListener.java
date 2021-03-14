@@ -14,12 +14,20 @@ import actores.ActorJugador;
 import actores.Movimiento;
 import actores.Objeto;
 
+/**
+ * Clase Teclado donde escuchara las tecla y el raton
+ */
 public class TecladoListener implements InputProcessor {
 
-
+    /**
+     * Jugador
+     */
     private ActorJugador jugador;
 
-
+    /**
+     * Constructor del teclado
+     * @param jugador le pasamos el jugador que estamos usando
+     */
     public TecladoListener(ActorJugador jugador) {
 
         this.jugador = jugador;
@@ -27,6 +35,11 @@ public class TecladoListener implements InputProcessor {
 
     }
 
+    /**
+     * Funcion para al pulsar una tecla haga una accion el jugador
+     * @param keycode tecla pulsada
+     * @return una accion
+     */
     @Override
     public boolean keyDown(int keycode) {
 
@@ -35,19 +48,7 @@ public class TecladoListener implements InputProcessor {
             case Input.Keys.A:
                 if (this.jugador.isEstaEnElSuelo() == true) {
                     jugador.iniciarMovimiento(Movimiento.SALTO);
-                  /*  System.out.println("toco");
-
-                    this.jugador.setMasSalto(true);
-
-                    this.jugador.salto();*/
                 }
-                break;
-            case Input.Keys.R:
-                RotateByAction rotar = new RotateByAction();
-                rotar.setAmount(-20);
-                rotar.setDuration(0.3f);
-                jugador.addAction(rotar);
-
                 break;
 
             case Input.Keys.F:
@@ -65,16 +66,16 @@ public class TecladoListener implements InputProcessor {
                 }
                 break;
 
-
-
-        //public static final float PLAYER_SPEED=5f;
-
-
         }
         return false;
 
     }
 
+    /**
+     * Funcion para cuando dejamos soltar la tecla
+     * @param keycode tecla que dejamos de pulasr
+     * @return false
+     */
     @Override
     public boolean keyUp(int keycode) {
 
@@ -103,6 +104,14 @@ public class TecladoListener implements InputProcessor {
         return false;
     }
 
+    /**
+     * Funcion para controlar el click o el touch del juego
+     * @param screenX
+     * @param screenY
+     * @param pointer
+     * @param button
+     * @return
+     */
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         if (screenY > Gdx.graphics.getHeight() / 3) {
@@ -114,7 +123,14 @@ public class TecladoListener implements InputProcessor {
         return false;
     }
 
-
+    /**
+     * Funcion para cuando dejamos de pulsar el click
+     * @param screenX
+     * @param screenY
+     * @param pointer
+     * @param button
+     * @return
+     */
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         if (screenY > Gdx.graphics.getHeight() / 3) {
