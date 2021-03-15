@@ -2,7 +2,6 @@ package Pantallas;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -13,7 +12,6 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Intersector;
@@ -33,7 +31,8 @@ import Teclado.TecladoListener;
 import actores.ActorJugador;
 import actores.Objeto;
 import actores.Pincho;
-import basededatos.BaseDeDatos;
+import basededatos.BaseDatos;
+
 import es.com.saltosvirtuales.Principal;
 
 /**
@@ -77,7 +76,7 @@ public class PantallaJuego extends BaseScreen {
      */
     private ArrayList<Body> win;
 
-
+    private BaseDatos bd;
 //-------------------------------------------------
     /**
      * World del juego
@@ -120,16 +119,16 @@ public class PantallaJuego extends BaseScreen {
     /**
      * Base de datos
      */
-    private BaseDeDatos bd;
+
 
 
     /**
      * Contructor de pantalla de jugo
      * @param game clase principal
      */
-    public PantallaJuego(Principal game) {
+    public PantallaJuego(Principal game,BaseDatos bd) {
         super(game);
-      bd=  game.getBd();
+        this.bd=bd;
 
 
 
@@ -141,7 +140,7 @@ public class PantallaJuego extends BaseScreen {
     @Override
     public void show() {
         batch = new SpriteBatch();
-
+        bd.cargarPartida();
         batchTexto = new SpriteBatch();
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fuente/arial.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -347,7 +346,7 @@ public class PantallaJuego extends BaseScreen {
 
         batchTexto.begin();
 
-         switch (bd.cargarMuertes()){
+         switch (bd.getMuertes()){
            case 0:
                titulo="pro";
                break;
@@ -362,12 +361,12 @@ public class PantallaJuego extends BaseScreen {
                break;
        }
 
-        textoPantalla.draw(batchTexto,"Muertes: "+bd.cargarMuertes()+" Eres un "+titulo,150,-Gdx.graphics.getHeight()/30+Gdx.graphics.getHeight(),Gdx.graphics.getWidth()/30,1,false);
-        textoPantalla.draw(batchTexto,"Puntuacion: "+bd.cargarPuntuacion(),70,Gdx.graphics.getHeight()/30,Gdx.graphics.getWidth()/30,1,false);
+        textoPantalla.draw(batchTexto,"Muertes: "+bd.getMuertes()+" Eres un "+titulo,150,-Gdx.graphics.getHeight()/30+Gdx.graphics.getHeight(),Gdx.graphics.getWidth()/30,1,false);
+           textoPantalla.draw(batchTexto,"Puntuacion: "+bd.getPuntuacion(),70,Gdx.graphics.getHeight()/30,Gdx.graphics.getWidth()/30,1,false);
 
         if (jugador.isGanar()){
             textoPantalla.draw(batchTexto,"Ganasteeee!!",150,Gdx.graphics.getHeight()/2,Gdx.graphics.getWidth()/2,1,false);
-
+            bd.ganarPartida();
             music.stop();
 
         }
@@ -376,8 +375,12 @@ public class PantallaJuego extends BaseScreen {
 
         camera.update();
         if (jugador.isVivo()==false){
+            bd.getMuertes();
+            bd.aumentarMuertes();
+
+            bd.persistirPartida();
             music.stop();
-            bd.guardarMuertes(bd.cargarMuertes()+1);
+         //   bd.guardarMuertes(bd.cargarMuertes()+1);
             System.out.println("Posicion X: "+ jugador.getCuerpo().getPosition().x+" Posicion y "+jugador.getCuerpo().getPosition().y);
             restablecer();
 
@@ -451,8 +454,12 @@ public class PantallaJuego extends BaseScreen {
                 }else {
                     jugador.setPuntuacion((byte) (jugador.getPuntuacion() + 1));
                     System.out.println("Recogistes una moneda");
+
                     objeto.setMostrar(false);
-                    bd.GuardarPuntuacion(jugador.getPuntuacion());
+                    bd.getPuntuacion();
+                    bd.aumentarPuntuacion();
+
+
 
                 }
 
@@ -534,11 +541,19 @@ public class PantallaJuego extends BaseScreen {
     private void restablecer(){
         music = Gdx.audio.newMusic(Gdx.files.internal("audio/song.ogg"));
         jugador.setVivo(true);
-      //  jugador.setPuntuacion((byte)0);
+
+
         jugador.getCuerpo().setTransform(5,6.5f,jugador.getCuerpo().getAngle());
         for (int i=0;i<objetos.size();i++){
-            if (!objetos.get(i).getNombreObjeto().equalsIgnoreCase("moneda")&&(!objetos.get(i).getNombreObjeto().equalsIgnoreCase("calavera"))) {
+
+            if ((!objetos.get(i).getNombreObjeto().equalsIgnoreCase("calavera"))) {
+
                 objetos.get(i).setMostrar(true);
+            }
+            if(objetos.get(i).getNombreObjeto().equalsIgnoreCase("moneda")){
+
+                //objetos.get(i).setMostrar(false);
+
             }
         }
 

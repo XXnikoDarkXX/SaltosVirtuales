@@ -5,7 +5,7 @@ import com.badlogic.gdx.Game;
 
 import Pantallas.PantallaJuego;
 import Pantallas.PantallaMenu;
-import basededatos.BaseDeDatos;
+import basededatos.BaseDatos;
 
 /**
  * Clase principal donde inizializamos el juego y el menu
@@ -15,18 +15,19 @@ public class Principal extends Game {
 	 * Variable privada pantalla del juego
 	 */
 	private PantallaJuego pantallaJuego;
+	private BaseDatos bd;
 	/**
 	 * Base de datos del juego
 	 */
-	private BaseDeDatos bd;
+
 
 	/**
 	 * Constructor de Principal
-	 * @param bd base de datos
+	 * @param
 	 */
-	public Principal(BaseDeDatos bd){
-		this.bd=bd;
+	public Principal(BaseDatos bd){
 
+	this.bd=bd;
 	}
 
 	@Override
@@ -39,17 +40,11 @@ public class Principal extends Game {
 	 * @return la PantallaJuego
 	 */
 	public PantallaJuego getPantallaJuego() {
-		this.pantallaJuego=new PantallaJuego(this);
+		this.pantallaJuego=new PantallaJuego(this,this.bd);
 		return pantallaJuego;
 	}
 
-	/**
-	 * Getter de baseDatos
-	 * @return la base datos
-	 */
-	public BaseDeDatos getBd() {
-		return bd;
-	}
+
 }
 
 
