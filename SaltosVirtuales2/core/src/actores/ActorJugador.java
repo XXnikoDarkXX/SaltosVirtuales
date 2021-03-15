@@ -128,7 +128,7 @@ public class ActorJugador extends Actor {
 
         //desde el principio
         sprite.setBounds(5,6.5f,1f,1.5f);
-      
+
 
         this.propiedadesCuerpo=new BodyDef();//Establecemos las propiedades del cuero;
         propiedadesCuerpo.fixedRotation = true;//Cuerpo no rote
