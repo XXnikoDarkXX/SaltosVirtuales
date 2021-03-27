@@ -10,7 +10,7 @@ En caso de no ejecutar directamente la version desktop tendreis que crear una nu
 
 
 ### Pre-requisitos 
-####Base de Datos
+#### Base de Datos
 
 create database geometry;
 
