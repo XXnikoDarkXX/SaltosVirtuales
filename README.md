@@ -12,11 +12,11 @@ En caso de no ejecutar directamente la version desktop tendreis que crear una nu
 ### Pre-requisitos 
 #### Base de Datos
 
-create database geometry;
+	create database geometry;
 
-use geometry;
+	use geometry;
 
-create table partida(
+	create table partida(
 	puntucion int(2),
     muertes int (3));
     
