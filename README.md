@@ -1,6 +1,6 @@
 # SaltosVirtuales
 Proyecto de Juego creado en LibGDX para 2º Trimestre de PDM 2020-2021
-Este juego se base en un Geomtry Dash
+Este juego se base en un Geometry Dash
 
 ## Instrucciones 🚀
 
