@@ -29,7 +29,7 @@ En caso de no ejecutar directamente la version desktop tendreis que crear una nu
 * [LibGDX](https://libgdx.com/) - El motor de juego usado
 * [Android Studio](https://developer.android.com/studio?hl=es) - IDE para creacion del proyecto
 * [Trello](https://trello.com/) - Organizador de tareas por medio de tablones
-* [Trello](https://trello.com/) - Organizador de tareas por medio de tablones
+
 
  
  
